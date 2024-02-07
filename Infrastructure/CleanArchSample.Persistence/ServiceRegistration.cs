@@ -1,4 +1,5 @@
-﻿using CleanArchSample.Persistence.Context;
+﻿using CleanArchSample.Application.Interfaces;
+using CleanArchSample.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ namespace CleanArchSample.Persistence
         {
             services.AddDbContext<AppDbContext>(opt =>
                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped(typeof(IReadRepository<>), typeof(IReadRepository<>));
         }
     }
 }
