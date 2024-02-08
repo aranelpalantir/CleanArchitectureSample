@@ -1,6 +1,6 @@
 ﻿using CleanArchSample.Domain.Common;
 
-namespace CleanArchSample.Application.Interfaces
+namespace CleanArchSample.Application.Interfaces.Repositories
 {
     public interface IWriteRepository<T> where T : class, IEntityBase, new()
     {
