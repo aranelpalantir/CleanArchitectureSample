@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\CleanArchSample.Persistence\CleanArchSample.Persistence.csproj" />
   </ItemGroup>
 
