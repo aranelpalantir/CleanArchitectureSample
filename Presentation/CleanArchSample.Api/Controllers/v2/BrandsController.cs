@@ -14,8 +14,8 @@ namespace CleanArchSample.Api.Controllers.v2
         [HttpGet]
         public async Task<IActionResult> GetAllBrands()
         {
-            var reponse = await Mediator.Send(new GetAllBrandsQueryRequest());
-            return Ok(reponse);
+            var response = await Mediator.Send(new GetAllBrandsQueryRequest());
+            return Ok(response);
         }
       }
 }

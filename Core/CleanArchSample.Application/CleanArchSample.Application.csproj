@@ -16,8 +16,4 @@
     <ProjectReference Include="..\CleanArchSample.Domain\CleanArchSample.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Products\Commands\" />
-  </ItemGroup>
-
 </Project>
