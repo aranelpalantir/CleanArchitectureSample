@@ -1,6 +1,8 @@
-﻿using CleanArchSample.Application.Interfaces;
+﻿using CleanArchSample.Application.Interfaces.Repositories;
+using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Persistence.Context;
 using CleanArchSample.Persistence.Repositories;
+using CleanArchSample.Persistence.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ namespace CleanArchSample.Persistence
 
             services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
             services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         }
     }
 }

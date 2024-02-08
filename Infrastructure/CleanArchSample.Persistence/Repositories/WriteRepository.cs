@@ -1,4 +1,4 @@
-﻿using CleanArchSample.Application.Interfaces;
+﻿using CleanArchSample.Application.Interfaces.Repositories;
 using CleanArchSample.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 

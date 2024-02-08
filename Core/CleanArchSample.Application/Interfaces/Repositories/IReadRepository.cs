@@ -2,7 +2,7 @@
 using CleanArchSample.Domain.Common;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace CleanArchSample.Application.Interfaces
+namespace CleanArchSample.Application.Interfaces.Repositories
 {
     public interface IReadRepository<T> where T : class, IEntityBase, new()
     {
