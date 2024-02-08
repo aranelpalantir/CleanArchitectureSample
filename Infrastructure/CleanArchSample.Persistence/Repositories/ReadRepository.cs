@@ -16,52 +16,81 @@ namespace CleanArchSample.Persistence.Repositories
         }
         private DbSet<T> Table => _dbContext.Set<T>();
 
-        public async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
+        private IQueryable<T> ApplyParameters(IQueryable<T> queryable, Expression<Func<T, bool>>? predicate = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = false)
         {
-            var queryable = Table.AsNoTracking();
-
-            if (include is not null)
-                queryable = include(queryable);
-            if (predicate is not null)
-                queryable = queryable.Where(predicate);
-            if (orderBy is not null)
-                queryable = orderBy(queryable);
-
-            return await queryable.ToListAsync();
-        }
-
-        public async Task<IList<T>> GetAllByPagingAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int currentPage = 1,
-            int pageSize = 3)
-        {
-            var queryable = Table.AsNoTracking();
-
-            if (include is not null)
-                queryable = include(queryable);
-            if (predicate is not null)
-                queryable = queryable.Where(predicate);
-            if (orderBy is not null)
-                queryable = orderBy(queryable);
-
-            return await queryable.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync();
-        }
-
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = false)
-        {
-            var queryable = Table.AsQueryable();
             if (!enableTracking)
                 queryable = queryable.AsNoTracking();
             if (include is not null)
                 queryable = include(queryable);
-
-            queryable = queryable.Where(predicate);
-            return await queryable.SingleOrDefaultAsync();
-        }
-        public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
-        {
-            var queryable = Table.AsNoTracking();
             if (predicate is not null)
                 queryable = queryable.Where(predicate);
-            return await queryable.CountAsync();
+            if (orderBy is not null)
+                queryable = orderBy(queryable);
+            return queryable;
+        }
+
+        public async Task<IReadOnlyList<T>> ToListAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate, include, orderBy);
+            return await queryable.ToListAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<T>> ToListByPagingAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int currentPage = 1,
+            int pageSize = 3, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate, include, orderBy);
+            return await queryable.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        }
+
+        public async Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            return await queryable.SingleOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<T> SingleAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            return await queryable.SingleAsync(cancellationToken);
+        }
+
+        public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            return await queryable.FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<T> FirstAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = false, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            return await queryable.FirstAsync(cancellationToken);
+        }
+
+        public async Task<T?> FindAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
+        {
+            return await Table.FindAsync(new object[] { id }, cancellationToken);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate);
+            return await queryable.CountAsync(cancellationToken);
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default)
+        {
+            var queryable = Table.AsQueryable();
+            queryable = ApplyParameters(queryable, predicate);
+            return await queryable.AnyAsync(cancellationToken);
         }
     }
 }
