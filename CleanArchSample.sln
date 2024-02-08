@@ -9,17 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{EA3C139A-0800-419F-9BF4-65E423BAAF62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchSample.Domain", "Core\CleanArchSample.Domain\CleanArchSample.Domain.csproj", "{0C278EA7-88A9-4ABA-96FA-F3FDD4A0CD10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchSample.Domain", "Core\CleanArchSample.Domain\CleanArchSample.Domain.csproj", "{0C278EA7-88A9-4ABA-96FA-F3FDD4A0CD10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchSample.Application", "Core\CleanArchSample.Application\CleanArchSample.Application.csproj", "{A1DC1EC9-5932-406E-81A4-D295BE7DC91D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchSample.Application", "Core\CleanArchSample.Application\CleanArchSample.Application.csproj", "{A1DC1EC9-5932-406E-81A4-D295BE7DC91D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchSample.Mapper", "Core\CleanArchSample.Mapper\CleanArchSample.Mapper.csproj", "{32F0BF69-D18E-4B69-A1C3-E5F1A0D11845}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchSample.Infrastructure", "Infrastructure\CleanArchSample.Infrastructure\CleanArchSample.Infrastructure.csproj", "{363050A3-C494-4491-8464-49FCE32F7EA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchSample.Infrastructure", "Infrastructure\CleanArchSample.Infrastructure\CleanArchSample.Infrastructure.csproj", "{363050A3-C494-4491-8464-49FCE32F7EA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchSample.Persistence", "Infrastructure\CleanArchSample.Persistence\CleanArchSample.Persistence.csproj", "{B6D28218-EAB6-4EDD-8F5D-6CF045993CC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchSample.Persistence", "Infrastructure\CleanArchSample.Persistence\CleanArchSample.Persistence.csproj", "{B6D28218-EAB6-4EDD-8F5D-6CF045993CC3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchSample.Api", "Presentation\CleanArchSample.Api\CleanArchSample.Api.csproj", "{46041353-8BFD-46AB-9787-C6FD732C59B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchSample.Api", "Presentation\CleanArchSample.Api\CleanArchSample.Api.csproj", "{46041353-8BFD-46AB-9787-C6FD732C59B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{A1DC1EC9-5932-406E-81A4-D295BE7DC91D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1DC1EC9-5932-406E-81A4-D295BE7DC91D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1DC1EC9-5932-406E-81A4-D295BE7DC91D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{32F0BF69-D18E-4B69-A1C3-E5F1A0D11845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32F0BF69-D18E-4B69-A1C3-E5F1A0D11845}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32F0BF69-D18E-4B69-A1C3-E5F1A0D11845}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32F0BF69-D18E-4B69-A1C3-E5F1A0D11845}.Release|Any CPU.Build.0 = Release|Any CPU
 		{363050A3-C494-4491-8464-49FCE32F7EA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{363050A3-C494-4491-8464-49FCE32F7EA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{363050A3-C494-4491-8464-49FCE32F7EA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -58,7 +52,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0C278EA7-88A9-4ABA-96FA-F3FDD4A0CD10} = {9EB5EC9E-A98D-4215-809D-7E2A147F45B9}
 		{A1DC1EC9-5932-406E-81A4-D295BE7DC91D} = {9EB5EC9E-A98D-4215-809D-7E2A147F45B9}
-		{32F0BF69-D18E-4B69-A1C3-E5F1A0D11845} = {9EB5EC9E-A98D-4215-809D-7E2A147F45B9}
 		{363050A3-C494-4491-8464-49FCE32F7EA3} = {B75EBF63-0D1E-4A3C-915A-EAC139D8F401}
 		{B6D28218-EAB6-4EDD-8F5D-6CF045993CC3} = {B75EBF63-0D1E-4A3C-915A-EAC139D8F401}
 		{46041353-8BFD-46AB-9787-C6FD732C59B3} = {EA3C139A-0800-419F-9BF4-65E423BAAF62}
