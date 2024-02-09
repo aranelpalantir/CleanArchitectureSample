@@ -19,7 +19,7 @@ namespace CleanArchSample.Persistence.Repositories
             await Table.AddAsync(entity, cancellationToken);
         }
 
-        public async Task AddRangeAsync(IList<T> entities, CancellationToken cancellationToken = default)
+        public async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
             await Table.AddRangeAsync(entities, cancellationToken);
         }
@@ -40,7 +40,7 @@ namespace CleanArchSample.Persistence.Repositories
             await Task.Run(() => Table.Remove(entity), cancellationToken);
         }
 
-        public async Task RemoveRangeAsync(IList<T> entities, CancellationToken cancellationToken = default)
+        public async Task RemoveRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
             await Task.Run(() => Table.RemoveRange(entities), cancellationToken);
         }

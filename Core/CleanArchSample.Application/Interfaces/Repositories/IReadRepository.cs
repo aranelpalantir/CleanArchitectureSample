@@ -18,16 +18,16 @@ namespace CleanArchSample.Application.Interfaces.Repositories
 
         Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-            bool enableTracking = false, CancellationToken cancellationToken = default);
+            bool enableTracking = true, CancellationToken cancellationToken = default);
         Task<T> SingleAsync(Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-            bool enableTracking = false, CancellationToken cancellationToken = default);
+            bool enableTracking = true, CancellationToken cancellationToken = default);
         Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-            bool enableTracking = false, CancellationToken cancellationToken = default);
+            bool enableTracking = true, CancellationToken cancellationToken = default);
         Task<T> FirstAsync(Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-            bool enableTracking = false, CancellationToken cancellationToken = default);
+            bool enableTracking = true, CancellationToken cancellationToken = default);
 
         Task<T?> FindAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull;
 
