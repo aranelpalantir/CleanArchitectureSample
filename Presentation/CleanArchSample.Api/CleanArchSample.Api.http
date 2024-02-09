@@ -1,5 +1,9 @@
 @CleanArchSample.Api_HostAddress = http://localhost:5164
 
+GET {{CleanArchSample.Api_HostAddress}}/api/v1/Products/GetAllProducts
+
+###
+
 POST {{CleanArchSample.Api_HostAddress}}/api/v1/Products/CreateProduct
 Content-Type: application/json
 

@@ -3,6 +3,7 @@ using CleanArchSample.Application.Features.Common;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
 {
@@ -14,7 +15,7 @@ namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
         public async Task<IReadOnlyList<GetAllProductsQueryResponse>> Handle(GetAllProductsQueryRequest request, CancellationToken cancellationToken)
         {
             var products = await UnitOfWork.GetReadRepository<Product>()
-                .ToListAsync(cancellationToken: cancellationToken);
+                .ToListAsync(include: r => r.Include(rr => rr.Brand), cancellationToken: cancellationToken);
 
             var response = Mapper.Map<IReadOnlyList<Product>, IReadOnlyList<GetAllProductsQueryResponse>>(products);
 

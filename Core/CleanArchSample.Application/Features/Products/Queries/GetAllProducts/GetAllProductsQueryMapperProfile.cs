@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CleanArchSample.Application.Features.Products.Queries.GetAllProducts.Dtos;
 using CleanArchSample.Domain.Entities;
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
@@ -8,6 +9,7 @@ namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
         public GetAllProductsQueryMapperProfile()
         {
             CreateMap<Product, GetAllProductsQueryResponse>();
+            CreateMap<Brand, BrandDto>();
         }
     }
 }
