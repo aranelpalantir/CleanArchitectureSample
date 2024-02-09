@@ -1,5 +1,5 @@
 ﻿using Asp.Versioning;
-using CleanArchSample.Application.Features.Products.Queries.GetAllBrands;
+using CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
