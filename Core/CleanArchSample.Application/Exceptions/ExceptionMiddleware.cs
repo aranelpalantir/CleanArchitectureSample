@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Exceptions
@@ -22,6 +22,15 @@ namespace CleanArchSample.Application.Exceptions
             var statusCode = GetStatusCode(exception);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
+
+            if (exception.GetType() == typeof(ValidationException))
+                return context.Response.WriteAsync(new ExceptionModel
+                {
+                    Errors = ((ValidationException)exception).Errors.Select(r => r.ErrorMessage),
+                    StatusCode = statusCode
+                }.ToString());
+
+
             List<string> errors = new()
             {
                 exception.Message
@@ -36,7 +45,7 @@ namespace CleanArchSample.Application.Exceptions
         private static int GetStatusCode(Exception exception) =>
             exception switch
             {
-                ValidationException => StatusCodes.Status422UnprocessableEntity,
+                ValidationException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
     }
