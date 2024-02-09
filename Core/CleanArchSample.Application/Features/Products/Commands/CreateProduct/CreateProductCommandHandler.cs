@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CleanArchSample.Application.Features.Common;
+using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
@@ -8,11 +9,16 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
 {
     public class CreateProductCommandHandler : CqrsHandlerBase, IRequestHandler<CreateProductCommandRequest, Unit>
     {
-        public CreateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private readonly ProductRule _productRule;
+
+        public CreateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ProductRule productRule) : base(unitOfWork, mapper)
         {
+            _productRule = productRule;
         }
         public async Task<Unit> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
         {
+            await ValidateRules(request, cancellationToken);
+
             var product = Mapper.Map<Product>(request);
             product.CreatedBy = "-";
             product.CreatedDate = DateTimeOffset.UtcNow;
@@ -29,6 +35,11 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
             await UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
+        }
+
+        private async Task ValidateRules(CreateProductCommandRequest request, CancellationToken cancellationToken)
+        {
+            await _productRule.ProductTitleMustNotBeSame(UnitOfWork.GetReadRepository<Product>(), request.Title, cancellationToken);
         }
     }
 }

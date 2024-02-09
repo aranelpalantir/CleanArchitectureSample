@@ -46,6 +46,7 @@ namespace CleanArchSample.Application.Exceptions
             exception switch
             {
                 ValidationException => StatusCodes.Status400BadRequest,
+                BaseRuleException => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };
     }
