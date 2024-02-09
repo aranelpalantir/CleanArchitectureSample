@@ -2,6 +2,7 @@
 using System.Reflection;
 using CleanArchSample.Application.Behaviours;
 using CleanArchSample.Application.Exceptions;
+using CleanArchSample.Application.Interfaces.Rules;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,18 @@ namespace CleanArchSample.Application
             services.AddValidatorsFromAssembly(assembly);
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("tr");
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehaviour<,>));
+
+            services.AddRulesFromAssembylContaining(assembly, typeof(IBaseRule));
+        }
+
+        private static void AddRulesFromAssembylContaining(this IServiceCollection services,
+            Assembly assembly, Type type)
+        {
+            var types = assembly.GetTypes().Where(t => t.GetInterfaces().Contains(type)).ToList();
+            foreach (var item in types)
+            {
+                services.AddTransient(item);
+            }
         }
     }
 }
