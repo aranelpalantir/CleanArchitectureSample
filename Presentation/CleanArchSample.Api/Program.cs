@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using CleanArchSample.Application;
+using CleanArchSample.Application.Exceptions;
 using CleanArchSample.Persistence;
 using Microsoft.OpenApi.Models;
 
@@ -63,6 +64,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.ConfigureExceptionHandlingMiddleware();
 app.UseAuthorization();
 
 app.MapControllers();

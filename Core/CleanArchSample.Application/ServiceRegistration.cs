@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using CleanArchSample.Application.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchSample.Application
@@ -10,7 +11,7 @@ namespace CleanArchSample.Application
             var assembly = Assembly.GetExecutingAssembly();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
             services.AddAutoMapper(assembly);
-
+            services.AddTransient<ExceptionMiddleware>();
         }
     }
 }
