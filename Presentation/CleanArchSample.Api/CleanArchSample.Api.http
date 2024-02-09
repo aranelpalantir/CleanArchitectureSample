@@ -1,6 +1,39 @@
 @CleanArchSample.Api_HostAddress = http://localhost:5164
 
-GET {{CleanArchSample.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{CleanArchSample.Api_HostAddress}}/api/v1/Products/CreateProduct
+Content-Type: application/json
 
+{
+  "title": "test title",
+  "description": "test description",
+  "brandId": 1,
+  "price": 1000,
+  "discount": 100,
+  "categoryIds": [
+    1,2
+  ]
+}
+###
+
+POST {{CleanArchSample.Api_HostAddress}}/api/v1/Products/UpdateProduct
+Content-Type: application/json
+
+{
+  "id": 7,
+  "title": "test title",
+  "description": "test description",
+  "brandId": 1,
+  "price": 100,
+  "discount": 10,
+  "categoryIds": [
+    3,4
+  ]
+}
+###
+POST {{CleanArchSample.Api_HostAddress}}/api/v1/Products/DeleteProduct
+Content-Type: application/json
+
+{
+  "id":7
+}
 ###
