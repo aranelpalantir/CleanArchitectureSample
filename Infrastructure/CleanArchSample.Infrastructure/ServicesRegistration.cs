@@ -3,10 +3,11 @@ using CleanArchSample.Infrastructure.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.Extensions.Options;
-using System;
+using CleanArchSample.Application.Interfaces.RedisCache;
+using CleanArchSample.Infrastructure.RedisCache;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using StackExchange.Redis;
 
 namespace CleanArchSample.Infrastructure
 {
@@ -16,19 +17,41 @@ namespace CleanArchSample.Infrastructure
         {
             services.Configure<TokenSettings>(configuration.GetSection("JWT"));
             services.AddTransient<ITokenService, TokenService>();
+            services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCache"));
+            services.AddTransient<IRedisCacheService, RedisCacheService>();
+
+            var serviceScopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
+
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
             {
-                var serviceProvider = services.BuildServiceProvider();
-                var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
                 using var scope = serviceScopeFactory.CreateScope();
-                var scopeServiceProvider = scope.ServiceProvider;
-                var tokenService = scopeServiceProvider.GetRequiredService<ITokenService>();
+                var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
                 opt.SaveToken = true;
                 opt.TokenValidationParameters = tokenService.GetTokenValidationParameters();
+            });
+            services.AddStackExchangeRedisCache(opt =>
+            {
+                using var scope = serviceScopeFactory.CreateScope();
+                var redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
+                opt.Configuration = redisCacheSettings.Configuration;
+                opt.InstanceName = redisCacheSettings.InstanceName;
+            });
+            services.AddScoped<IDatabase>(cfg =>
+            {
+                using var scope = serviceScopeFactory.CreateScope();
+                var redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
+                IConnectionMultiplexer multiplexer = ConnectionMultiplexer.Connect(redisCacheSettings.Configuration,
+                    opt =>
+                    {
+                        opt.ConnectTimeout = 1000;
+                        opt.AsyncTimeout = 1000;
+                        opt.SyncTimeout = 1000;
+                    });
+                return multiplexer.GetDatabase();
             });
         }
     }

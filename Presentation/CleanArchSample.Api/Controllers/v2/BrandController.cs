@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CleanArchSample.Api.Controllers.v2
 {
     [ApiVersion("2.0")]
-    public class BrandsController : BaseApiController
+    public class BrandController : BaseApiController
     {
-        public BrandsController(IMediator mediator) : base(mediator)
+        public BrandController(IMediator mediator) : base(mediator)
         {
         }
         [HttpGet]
