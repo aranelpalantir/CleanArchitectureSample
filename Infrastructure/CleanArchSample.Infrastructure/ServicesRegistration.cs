@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using CleanArchSample.Application.Interfaces.RedisCache;
 using CleanArchSample.Infrastructure.RedisCache;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using StackExchange.Redis;
 
 namespace CleanArchSample.Infrastructure
@@ -40,18 +39,21 @@ namespace CleanArchSample.Infrastructure
                 opt.Configuration = redisCacheSettings.Configuration;
                 opt.InstanceName = redisCacheSettings.InstanceName;
             });
+            services.AddSingleton<IConnectionMultiplexer>(cfg =>
+            {
+                var redisCacheSettings = cfg.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
+                var multiplexer = ConnectionMultiplexer.Connect(redisCacheSettings.Configuration, opt =>
+                {
+                    opt.ConnectTimeout = 1000;
+                    opt.AsyncTimeout = 1000;
+                    opt.SyncTimeout = 1000;
+                });
+                return multiplexer;
+            });
             services.AddScoped<IDatabase>(cfg =>
             {
-                using var scope = serviceScopeFactory.CreateScope();
-                var redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
-                IConnectionMultiplexer multiplexer = ConnectionMultiplexer.Connect(redisCacheSettings.Configuration,
-                    opt =>
-                    {
-                        opt.ConnectTimeout = 1000;
-                        opt.AsyncTimeout = 1000;
-                        opt.SyncTimeout = 1000;
-                    });
-                return multiplexer.GetDatabase();
+                var connectionMultiplexer = cfg.GetRequiredService<IConnectionMultiplexer>();
+                return connectionMultiplexer.GetDatabase();
             });
         }
     }
