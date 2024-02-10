@@ -3,13 +3,15 @@ using CleanArchSample.Application.Features.Common;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
 {
     public class GetAllProductsQueryHandler : CqrsHandlerBase, IRequestHandler<GetAllProductsQueryRequest, IReadOnlyList<GetAllProductsQueryResponse>>
     {
-        public GetAllProductsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public GetAllProductsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper,
+            IHttpContextAccessor httpContextAccessor) : base(unitOfWork, mapper, httpContextAccessor)
         {
         }
         public async Task<IReadOnlyList<GetAllProductsQueryResponse>> Handle(GetAllProductsQueryRequest request, CancellationToken cancellationToken)

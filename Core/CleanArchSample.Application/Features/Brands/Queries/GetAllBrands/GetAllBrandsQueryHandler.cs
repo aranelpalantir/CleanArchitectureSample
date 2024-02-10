@@ -3,12 +3,14 @@ using CleanArchSample.Application.Features.Common;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 
 public class GetAllBrandsQueryHandler : CqrsHandlerBase, IRequestHandler<GetAllBrandsQueryRequest, IReadOnlyList<GetAllBrandsQueryResponse>>
 {
-    public GetAllBrandsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    public GetAllBrandsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper,
+        IHttpContextAccessor httpContextAccessor) : base(unitOfWork, mapper, httpContextAccessor)
     {
     }
     public async Task<IReadOnlyList<GetAllBrandsQueryResponse>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)

@@ -4,6 +4,7 @@ using CleanArchSample.Application.Features.Products.Commands.DeleteProduct;
 using CleanArchSample.Application.Features.Products.Commands.UpdateProduct;
 using CleanArchSample.Application.Features.Products.Queries.GetAllProducts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchSample.Api.Controllers.v1
@@ -15,6 +16,7 @@ namespace CleanArchSample.Api.Controllers.v1
         {
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {

@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
+using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Common
 {
@@ -7,11 +9,15 @@ namespace CleanArchSample.Application.Features.Common
     {
         protected readonly IUnitOfWork UnitOfWork;
         protected readonly IMapper Mapper;
+        protected readonly IHttpContextAccessor HttpContextAccessor;
+        protected string? UserId;
 
-        protected CqrsHandlerBase(IUnitOfWork unitOfWork, IMapper mapper)
+        protected CqrsHandlerBase(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             UnitOfWork = unitOfWork;
             Mapper = mapper;
+            HttpContextAccessor = httpContextAccessor;
+            UserId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }

@@ -4,6 +4,7 @@ using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
 {
@@ -11,10 +12,12 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
     {
         private readonly ProductRule _productRule;
 
-        public CreateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ProductRule productRule) : base(unitOfWork, mapper)
+        public CreateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
+            IHttpContextAccessor httpContextAccessor, ProductRule productRule) : base(unitOfWork, mapper, httpContextAccessor)
         {
             _productRule = productRule;
         }
+
         public async Task<Unit> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
         {
             await ValidateRules(request, cancellationToken);

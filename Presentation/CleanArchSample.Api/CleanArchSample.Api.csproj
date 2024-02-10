@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\CleanArchSample.Infrastructure\CleanArchSample.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\CleanArchSample.Persistence\CleanArchSample.Persistence.csproj" />
   </ItemGroup>
 
