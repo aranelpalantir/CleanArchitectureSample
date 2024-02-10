@@ -3,13 +3,15 @@ using CleanArchSample.Application.Features.Common;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Application.Features.Products.Commands.UpdateProduct
 {
     internal class UpdateProductCommandHandler : CqrsHandlerBase, IRequestHandler<UpdateProductCommandRequest, Unit>
     {
-        public UpdateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public UpdateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
+            IHttpContextAccessor httpContextAccessor) : base(unitOfWork, mapper, httpContextAccessor)
         {
         }
 

@@ -1,7 +1,8 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using CleanArchSample.Application;
 using CleanArchSample.Application.Exceptions;
 using CleanArchSample.Persistence;
+using CleanArchSample.Infrastructure;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,8 +26,33 @@ builder.Services.AddSwaggerGen(c =>
         Title = "Clean Architecture - WebApi v2",
         Description = "This Api will be responsible for overall data distribution and authorization."
     });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "'Bearer yazıp boşluk bırakıp Token'ı girmelisiniz. \r\n\r\n Örneğin: Bearer eyfsefertewrtewt."
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 var env = builder.Environment;
 builder.Configuration
     .SetBasePath(env.ContentRootPath)
@@ -34,6 +60,7 @@ builder.Configuration
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddApiVersioning(options =>
 {
@@ -65,6 +92,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.ConfigureExceptionHandlingMiddleware();
+
 app.UseAuthorization();
 
 app.MapControllers();
