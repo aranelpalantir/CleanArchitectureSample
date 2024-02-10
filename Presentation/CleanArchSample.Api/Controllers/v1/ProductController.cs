@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CleanArchSample.Api.Controllers.v1
 {
     [ApiVersion("1.0")]
-    public class ProductsController : BaseApiController
+    public class ProductController : BaseApiController
     {
-        public ProductsController(IMediator mediator) : base(mediator)
+        public ProductController(IMediator mediator) : base(mediator)
         {
         }
 
