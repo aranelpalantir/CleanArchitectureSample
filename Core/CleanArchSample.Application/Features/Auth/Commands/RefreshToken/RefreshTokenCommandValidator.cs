@@ -6,10 +6,7 @@ namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
     {
         public RefreshTokenCommandValidator()
         {
-            RuleFor(p => p.AccessToken)
-                .NotEmpty();
-
-            RuleFor(p => p.RefreshTokenToken)
+            RuleFor(p => p.RefreshToken)
                 .NotEmpty();
         }
     }

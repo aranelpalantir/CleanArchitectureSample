@@ -7,7 +7,6 @@ using CleanArchSample.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
 {
@@ -31,9 +30,7 @@ namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
 
         public async Task<RefreshTokenCommandResponse> Handle(RefreshTokenCommandRequest request, CancellationToken cancellationToken)
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
-            var email = principal.FindFirstValue(ClaimTypes.Email);
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = _userManager.Users.SingleOrDefault(r => r.RefreshToken == request.RefreshToken);
             var roles = await _userManager.GetRolesAsync(user);
             await _authRule.RefreshTokenShouldNotBeExpired(user.RefreshTokenExpiry);
             var tokenModel = await _tokenService.CreateTokenModel(user, roles);
@@ -43,7 +40,7 @@ namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
             return new RefreshTokenCommandResponse
             {
                 AccessToken = tokenModel.Token,
-                RefreshTokenToken = tokenModel.RefreshToken
+                RefreshToken = tokenModel.RefreshToken
             };
         }
     }
