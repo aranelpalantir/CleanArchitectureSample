@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Reflection;
 using CleanArchSample.Application.Behaviours;
-using CleanArchSample.Application.Exceptions;
 using CleanArchSample.Application.Interfaces.Rules;
+using CleanArchSample.Application.Middlewares;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +19,7 @@ namespace CleanArchSample.Application
 
             services.AddAutoMapper(assembly);
 
+            services.AddTransient<RequestTimingMiddleware>();
             services.AddTransient<ExceptionMiddleware>();
 
             services.AddValidatorsFromAssembly(assembly);

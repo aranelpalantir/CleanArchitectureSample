@@ -1,9 +1,9 @@
 ﻿using Asp.Versioning;
 using CleanArchSample.Application;
-using CleanArchSample.Application.Exceptions;
 using CleanArchSample.Persistence;
 using CleanArchSample.Infrastructure;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,25 +76,42 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
-var app = builder.Build();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    Log.Information("Starting web application");
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Api v1");
-        c.SwaggerEndpoint("/swagger/v2/swagger.json", "Web Api v2");
-    });
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Api v1");
+            c.SwaggerEndpoint("/swagger/v2/swagger.json", "Web Api v2");
+        });
+    }
+
+    app.UseHttpsRedirection();
+
+    app.ConfigureApplicationMiddleware();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.ConfigureExceptionHandlingMiddleware();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

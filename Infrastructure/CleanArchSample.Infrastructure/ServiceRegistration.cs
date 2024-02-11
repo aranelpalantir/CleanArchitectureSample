@@ -10,7 +10,7 @@ using StackExchange.Redis;
 
 namespace CleanArchSample.Infrastructure
 {
-    public static class ServicesRegistration
+    public static class ServiceRegistration
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
