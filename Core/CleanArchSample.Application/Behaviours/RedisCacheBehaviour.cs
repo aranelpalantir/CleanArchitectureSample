@@ -37,9 +37,8 @@ namespace CleanArchSample.Application.Behaviours
                 try
                 {
                     var redisCacheAttribute = (RedisCacheAttribute)Attribute.GetCustomAttribute(type, typeof(RedisCacheAttribute));
-                    var cacheMinutes = redisCacheAttribute.CacheMinutes;
                     if (!redisError && response != null)
-                        await _redisCacheService.SetAsync<TResponse>(key, response, cacheMinutes);
+                        await _redisCacheService.SetAsync<TResponse>(key, response, redisCacheAttribute.CacheSeconds);
                 }
                 catch (Exception e)
                 {

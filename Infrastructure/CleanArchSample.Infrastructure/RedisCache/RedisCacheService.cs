@@ -26,14 +26,14 @@ namespace CleanArchSample.Infrastructure.RedisCache
             return default;
         }
 
-        public async Task SetAsync<T>(string key, T value, double? expirationMinute = null)
+        public async Task SetAsync<T>(string key, T value, double? expirationSeconds = null)
         {
             if (!_connectionMultiplexer.IsConnected)
                 return;
 
             TimeSpan? expiry = null;
-            if (expirationMinute != null)
-                expiry = TimeSpan.FromMinutes(expirationMinute.Value);
+            if (expirationSeconds != null)
+                expiry = TimeSpan.FromSeconds(expirationSeconds.Value);
 
             await _database.StringSetAsync(key, JsonSerializer.Serialize<T>(value), expiry);
         }
