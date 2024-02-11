@@ -5,31 +5,26 @@ using MediatR;
 
 namespace CleanArchSample.Application.Behaviours
 {
-    public class RedisCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    public class RedisCacheBehaviour<TRequest, TResponse>(IRedisCacheService redisCacheService)
+        : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest<TResponse>
     {
-        private readonly IRedisCacheService _redisCacheService;
-
-        public RedisCacheBehaviour(IRedisCacheService redisCacheService)
-        {
-            _redisCacheService = redisCacheService;
-        }
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var type = typeof(TRequest);
             var hasRedisCacheAttribute = Attribute.IsDefined(type, typeof(RedisCacheAttribute));
             if (hasRedisCacheAttribute)
             {
-                var redisError = false;
                 var key = GenerateKey(request);
-
-                var cachedData = await _redisCacheService.GetAsync<TResponse>(key);
+                var cachedData = await redisCacheService.GetAsync<TResponse>(key);
                 if (cachedData != null)
                     return cachedData;
 
                 var response = await next();
-                var redisCacheAttribute = (RedisCacheAttribute)Attribute.GetCustomAttribute(type, typeof(RedisCacheAttribute));
-                if (!redisError && response != null)
-                    await _redisCacheService.SetAsync<TResponse>(key, response, redisCacheAttribute.CacheSeconds);
+
+                var redisCacheAttribute = (RedisCacheAttribute?)Attribute.GetCustomAttribute(type, typeof(RedisCacheAttribute));
+                if (response != null && redisCacheAttribute != null)
+                    await redisCacheService.SetAsync<TResponse>(key, response, redisCacheAttribute.CacheSeconds);
             }
 
             return await next();

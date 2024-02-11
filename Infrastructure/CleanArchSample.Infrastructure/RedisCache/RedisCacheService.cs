@@ -4,38 +4,31 @@ using StackExchange.Redis;
 
 namespace CleanArchSample.Infrastructure.RedisCache
 {
-    public class RedisCacheService : IRedisCacheService
+    public class RedisCacheService(IDatabase database, IConnectionMultiplexer connectionMultiplexer)
+        : IRedisCacheService
     {
-        private readonly IDatabase _database;
-        private readonly IConnectionMultiplexer _connectionMultiplexer;
-
-        public RedisCacheService(IDatabase database, IConnectionMultiplexer connectionMultiplexer)
-        {
-            _database = database;
-            _connectionMultiplexer = connectionMultiplexer;
-        }
         public async Task<T?> GetAsync<T>(string key)
         {
-            if (!_connectionMultiplexer.IsConnected)
+            if (!connectionMultiplexer.IsConnected)
                 return default;
 
-            var value = await _database.StringGetAsync(key);
+            var value = await database.StringGetAsync(key);
             if (value.HasValue)
-                return JsonSerializer.Deserialize<T>(value);
+                return JsonSerializer.Deserialize<T>(value.ToString());
 
             return default;
         }
 
         public async Task SetAsync<T>(string key, T value, double? expirationSeconds = null)
         {
-            if (!_connectionMultiplexer.IsConnected)
+            if (!connectionMultiplexer.IsConnected)
                 return;
 
             TimeSpan? expiry = null;
             if (expirationSeconds != null)
                 expiry = TimeSpan.FromSeconds(expirationSeconds.Value);
 
-            await _database.StringSetAsync(key, JsonSerializer.Serialize<T>(value), expiry);
+            await database.StringSetAsync(key, JsonSerializer.Serialize<T>(value), expiry);
         }
     }
 }

@@ -10,33 +10,29 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
 {
-    public class RefreshTokenCommandHandler : CqrsHandlerBase, IRequestHandler<RefreshTokenCommandRequest, RefreshTokenCommandResponse>
+    public class RefreshTokenCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        UserManager<User> userManager,
+        ITokenService tokenService)
+        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor),
+            IRequestHandler<RefreshTokenCommandRequest, RefreshTokenCommandResponse>
     {
-        private readonly UserManager<User> _userManager;
-        private readonly ITokenService _tokenService;
-        private readonly AuthRule _authRule;
-
-        public RefreshTokenCommandHandler(IUnitOfWork unitOfWork,
-            IMapper mapper,
-            IHttpContextAccessor httpContextAccessor,
-            UserManager<User> userManager,
-            ITokenService tokenService,
-            AuthRule authRule) : base(unitOfWork, mapper, httpContextAccessor)
-        {
-            _userManager = userManager;
-            _tokenService = tokenService;
-            _authRule = authRule;
-        }
 
         public async Task<RefreshTokenCommandResponse> Handle(RefreshTokenCommandRequest request, CancellationToken cancellationToken)
         {
-            var user = _userManager.Users.SingleOrDefault(r => r.RefreshToken == request.RefreshToken);
-            var roles = await _userManager.GetRolesAsync(user);
-            await _authRule.RefreshTokenShouldNotBeExpired(user.RefreshTokenExpiry);
-            var tokenModel = await _tokenService.CreateTokenModel(user, roles);
+            var user = userManager.Users.SingleOrDefault(r => r.RefreshToken == request.RefreshToken);
+            await AuthRule.UserShouldBeExist(user);
+            await AuthRule.RefreshTokenShouldNotBeExpired(user!.RefreshTokenExpiry);
+
+            var roles = await userManager.GetRolesAsync(user);
+            var tokenModel = await tokenService.CreateTokenModel(user, roles);
+
             user.RefreshToken = tokenModel.RefreshToken;
-            await _userManager.UpdateAsync(user);
-            await _userManager.SetAuthenticationTokenAsync(user, "Default", "AccessToken", tokenModel.Token);
+
+            await userManager.UpdateAsync(user);
+            await userManager.SetAuthenticationTokenAsync(user, "Default", "AccessToken", tokenModel.Token);
             return new RefreshTokenCommandResponse
             {
                 AccessToken = tokenModel.Token,
