@@ -4,16 +4,16 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class RedisCacheAttribute : Attribute
     {
-        private const int DefaultCacheMinutes = 1;
-        public int CacheMinutes { get; }
+        private const int DefaultCacheSeconds = 15;
+        public int CacheSeconds { get; }
 
         public RedisCacheAttribute()
         {
-            CacheMinutes = DefaultCacheMinutes;
+            CacheSeconds = DefaultCacheSeconds;
         }
-        public RedisCacheAttribute(int cacheMinutes)
+        public RedisCacheAttribute(int cacheSeconds)
         {
-            CacheMinutes = cacheMinutes;
+            CacheSeconds = cacheSeconds;
         }
     }
 }
