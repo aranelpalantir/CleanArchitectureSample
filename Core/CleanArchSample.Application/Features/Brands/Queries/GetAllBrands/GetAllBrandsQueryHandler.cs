@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 
-internal class GetAllBrandsQueryHandler(
+internal sealed class GetAllBrandsQueryHandler(
     IUnitOfWork unitOfWork,
     IMapper mapper,
     IHttpContextAccessor httpContextAccessor)

@@ -3,7 +3,7 @@ using CleanArchSample.Domain.Entities;
 
 namespace CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 
-internal class GetAllBrandsQueryMapperProfile : Profile
+internal sealed class GetAllBrandsQueryMapperProfile : Profile
 {
     public GetAllBrandsQueryMapperProfile()
     {

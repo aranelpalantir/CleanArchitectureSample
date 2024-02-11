@@ -5,7 +5,7 @@ using CleanArchSample.Domain.Entities;
 
 namespace CleanArchSample.Application.Features.Products.Rules
 {
-    internal class ProductRule : IBaseRule
+    internal sealed class ProductRule : IBaseRule
     {
         public static async Task ProductTitleMustNotBeSame(IReadRepository<Product> repository, string title, CancellationToken cancellationToken)
         {

@@ -6,7 +6,7 @@ using CleanArchSample.Persistence.Repositories;
 
 namespace CleanArchSample.Persistence.UnitOfWorks
 {
-    internal class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
+    internal sealed class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
     {
         public async ValueTask DisposeAsync()
         {

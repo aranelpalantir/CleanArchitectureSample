@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace CleanArchSample.Application.Middlewares
 {
-    internal class RequestTimingMiddleware(ILogger<RequestTimingMiddleware> logger) : IMiddleware
+    internal sealed class RequestTimingMiddleware(ILogger<RequestTimingMiddleware> logger) : IMiddleware
     {
         private const int WarningThresholdMilliseconds = 3000;
 

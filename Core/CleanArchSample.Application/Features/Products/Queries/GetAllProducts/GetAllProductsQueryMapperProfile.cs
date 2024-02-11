@@ -4,7 +4,7 @@ using CleanArchSample.Domain.Entities;
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
 {
-    internal class GetAllProductsQueryMapperProfile : Profile
+    internal sealed class GetAllProductsQueryMapperProfile : Profile
     {
         public GetAllProductsQueryMapperProfile()
         {

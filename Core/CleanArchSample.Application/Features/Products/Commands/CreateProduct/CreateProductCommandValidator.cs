@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
 {
-    internal class CreateProductCommandValidator : AbstractValidator<CreateProductCommandRequest>
+    internal sealed class CreateProductCommandValidator : AbstractValidator<CreateProductCommandRequest>
     {
         public CreateProductCommandValidator()
         {

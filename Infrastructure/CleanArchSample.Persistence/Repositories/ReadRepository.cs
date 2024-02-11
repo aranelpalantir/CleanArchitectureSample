@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace CleanArchSample.Persistence.Repositories
 {
-    internal class ReadRepository<T>(DbContext dbContext) : IReadRepository<T>
+    internal sealed class ReadRepository<T>(DbContext dbContext) : IReadRepository<T>
         where T : class, IEntityBase, new()
     {
         private DbSet<T> Table => dbContext.Set<T>();

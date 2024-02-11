@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
 {
-    internal class CreateProductCommandHandler(
+    internal sealed class CreateProductCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor)
@@ -19,8 +19,6 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
             await ValidateRules(request, cancellationToken);
 
             var product = Mapper.Map<Product>(request);
-            product.CreatedBy = "-";
-            product.CreatedDate = DateTimeOffset.UtcNow;
 
             await UnitOfWork.GetWriteRepository<Product>().AddAsync(product, cancellationToken);
 

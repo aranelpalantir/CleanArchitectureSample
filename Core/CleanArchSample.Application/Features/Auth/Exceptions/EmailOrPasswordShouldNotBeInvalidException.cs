@@ -2,5 +2,5 @@
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions
 {
-    internal class EmailOrPasswordShouldNotBeInvalidException() : BaseRuleException("E-Posta adresi ya da parola hatalı!");
+    internal sealed class EmailOrPasswordShouldNotBeInvalidException() : BaseRuleException("E-Posta adresi ya da parola hatalı!");
 }

@@ -4,7 +4,7 @@ using StackExchange.Redis;
 
 namespace CleanArchSample.Infrastructure.RedisCache
 {
-    internal class RedisCacheService(IDatabase database, IConnectionMultiplexer connectionMultiplexer)
+    internal sealed class RedisCacheService(IDatabase database, IConnectionMultiplexer connectionMultiplexer)
         : IRedisCacheService
     {
         public async Task<T?> GetAsync<T>(string key)

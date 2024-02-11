@@ -1,6 +1,6 @@
 ﻿namespace CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 
-internal class GetAllBrandsQueryResponse
+internal sealed class GetAllBrandsQueryResponse
 {
     public string? Name { get; set; }
 }

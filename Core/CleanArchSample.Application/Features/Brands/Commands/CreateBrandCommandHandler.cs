@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Brands.Commands
 {
-    internal class CreateBrandCommandHandler(
+    internal sealed class CreateBrandCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor)
@@ -25,8 +25,6 @@ namespace CleanArchSample.Application.Features.Brands.Commands
                 brands.Add(new Brand
                 {
                     Name = faker.Commerce.Department(1),
-                    CreatedBy = "-",
-                    CreatedDate = DateTimeOffset.UtcNow
                 });
             }
 
