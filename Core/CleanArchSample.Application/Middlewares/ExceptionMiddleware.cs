@@ -1,10 +1,18 @@
-﻿using FluentValidation;
+﻿using CleanArchSample.Application.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
-namespace CleanArchSample.Application.Exceptions
+namespace CleanArchSample.Application.Middlewares
 {
     public class ExceptionMiddleware : IMiddleware
     {
+        private readonly ILogger<ExceptionMiddleware> _logger;
+
+        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
+        {
+            _logger = logger;
+        }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -13,11 +21,12 @@ namespace CleanArchSample.Application.Exceptions
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, $"Global Error: {ex.Message}");
                 await HandleException(context, ex);
             }
         }
 
-        private static Task HandleException(HttpContext context, Exception exception)
+        private Task HandleException(HttpContext context, Exception exception)
         {
             var statusCode = GetStatusCode(exception);
             context.Response.ContentType = "application/json";
@@ -30,14 +39,16 @@ namespace CleanArchSample.Application.Exceptions
                     StatusCode = statusCode
                 }.ToString());
 
+            if (exception.GetType() == typeof(BaseRuleException))
+                return context.Response.WriteAsync(new ExceptionModel
+                {
+                    Errors = new[] { exception.Message },
+                    StatusCode = statusCode
+                }.ToString());
 
-            List<string> errors = new()
-            {
-                exception.Message
-            };
             return context.Response.WriteAsync(new ExceptionModel
             {
-                Errors = errors,
+                Errors = new[] { "System Error!" },
                 StatusCode = statusCode
             }.ToString());
         }

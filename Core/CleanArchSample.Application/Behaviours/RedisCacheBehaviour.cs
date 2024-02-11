@@ -21,34 +21,20 @@ namespace CleanArchSample.Application.Behaviours
             {
                 var redisError = false;
                 var key = GenerateKey(request);
-                try
-                {
-                    var cachedData = await _redisCacheService.GetAsync<TResponse>(key);
-                    if (cachedData != null)
-                        return cachedData;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    redisError = true;
-                }
+
+                var cachedData = await _redisCacheService.GetAsync<TResponse>(key);
+                if (cachedData != null)
+                    return cachedData;
 
                 var response = await next();
-                try
-                {
-                    var redisCacheAttribute = (RedisCacheAttribute)Attribute.GetCustomAttribute(type, typeof(RedisCacheAttribute));
-                    if (!redisError && response != null)
-                        await _redisCacheService.SetAsync<TResponse>(key, response, redisCacheAttribute.CacheSeconds);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+                var redisCacheAttribute = (RedisCacheAttribute)Attribute.GetCustomAttribute(type, typeof(RedisCacheAttribute));
+                if (!redisError && response != null)
+                    await _redisCacheService.SetAsync<TResponse>(key, response, redisCacheAttribute.CacheSeconds);
             }
 
             return await next();
         }
-        public static string GenerateKey(TRequest queryObject)
+        private static string GenerateKey(TRequest queryObject)
         {
             var typeName = typeof(TRequest).FullName;
             var parameterString = JsonSerializer.Serialize(queryObject);
