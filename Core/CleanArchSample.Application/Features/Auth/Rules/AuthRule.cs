@@ -1,12 +1,11 @@
 ﻿using CleanArchSample.Application.Features.Auth.Exceptions;
 using CleanArchSample.Application.Interfaces.Rules;
 using CleanArchSample.Domain.Entities;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Rules
 {
-    public class AuthRule(UserManager<User> userManger) : IBaseRule
+    internal class AuthRule(UserManager<User> userManger) : IBaseRule
     {
         public async Task UserShouldNotBeExist(string email)
         {

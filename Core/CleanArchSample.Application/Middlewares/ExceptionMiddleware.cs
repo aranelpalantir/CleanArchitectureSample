@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchSample.Application.Middlewares
 {
-    public class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : IMiddleware
+    internal class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : IMiddleware
     {
         private static readonly string[] SystemError = ["System Error!"];
 
@@ -28,14 +28,14 @@ namespace CleanArchSample.Application.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
 
-            if (exception.GetType() == typeof(ValidationException))
+            if (exception is ValidationException validationException)
                 return context.Response.WriteAsync(new ExceptionModel
                 {
-                    Errors = ((ValidationException)exception).Errors.Select(r => r.ErrorMessage),
+                    Errors = validationException.Errors.Select(r => r.ErrorMessage),
                     StatusCode = statusCode
                 }.ToString());
 
-            if (exception.GetType() == typeof(BaseRuleException))
+            if (exception is BaseRuleException or BaseRepositoryException)
                 return context.Response.WriteAsync(new ExceptionModel
                 {
                     Errors = new[] { exception.Message },
@@ -54,6 +54,7 @@ namespace CleanArchSample.Application.Middlewares
             {
                 ValidationException => StatusCodes.Status400BadRequest,
                 BaseRuleException => StatusCodes.Status422UnprocessableEntity,
+                BaseRepositoryException => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };
     }

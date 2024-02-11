@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchSample.Persistence.EntityTypeConfigurations.Common
 {
-    public static class CommonConfiguration
+    internal static class CommonConfiguration
     {
         public static void ConfigureCommonProperties<T>(this EntityTypeBuilder<T> builder) where T : EntityBase
         {

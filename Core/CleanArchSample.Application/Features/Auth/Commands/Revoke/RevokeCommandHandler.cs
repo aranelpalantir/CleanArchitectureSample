@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Revoke
 {
-    public class RevokeCommandHandler(
+    internal class RevokeCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor,
@@ -18,7 +18,7 @@ namespace CleanArchSample.Application.Features.Auth.Commands.Revoke
     {
         public async Task<Unit> Handle(RevokeCommandRequest request, CancellationToken cancellationToken)
         {
-            var user = await userManager.FindByEmailAsync(request.Email);
+            var user = await userManager.FindByEmailAsync(request.Email!);
             await AuthRule.EmailAddressShouldBeValid(user);
             user!.RefreshToken = null;
             user.RefreshTokenExpiry = null;

@@ -8,18 +8,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Brands.Commands
 {
-    public class CreateBrandCommandHandler : CqrsHandlerBase, IRequestHandler<CreateBrandCommandRequest, Unit>
+    internal class CreateBrandCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor)
+        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor), IRequestHandler<CreateBrandCommandRequest, Unit>
     {
-        public CreateBrandCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, mapper, httpContextAccessor)
-        {
-        }
-
         public async Task<Unit> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
         {
             if (await UnitOfWork.GetReadRepository<Brand>().CountAsync(cancellationToken: cancellationToken) >= 1000000)
                 return Unit.Value;
             Faker faker = new("tr");
-            List<Brand> brands = new();
+            List<Brand> brands = [];
             for (var i = 0; i <= 1000000; i++)
             {
                 brands.Add(new Brand

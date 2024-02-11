@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
 {
-    public class GetAllProductsQueryHandler : CqrsHandlerBase, IRequestHandler<GetAllProductsQueryRequest, IReadOnlyList<GetAllProductsQueryResponse>>
+    internal class GetAllProductsQueryHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor)
+        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor),
+            IRequestHandler<GetAllProductsQueryRequest, IReadOnlyList<GetAllProductsQueryResponse>>
     {
-        public GetAllProductsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper,
-            IHttpContextAccessor httpContextAccessor) : base(unitOfWork, mapper, httpContextAccessor)
-        {
-        }
         public async Task<IReadOnlyList<GetAllProductsQueryResponse>> Handle(GetAllProductsQueryRequest request, CancellationToken cancellationToken)
         {
             var products = await UnitOfWork.GetReadRepository<Product>()

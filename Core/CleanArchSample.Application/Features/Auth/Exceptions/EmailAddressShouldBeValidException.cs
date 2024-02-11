@@ -2,8 +2,5 @@
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions
 {
-    public class EmailAddressShouldBeValidException:BaseRuleException
-    {
-        public EmailAddressShouldBeValidException() : base("Böyle bir email adresi bulunmamaktadır.") { }
-    }
+    internal class EmailAddressShouldBeValidException() : BaseRuleException("Böyle bir email adresi bulunmamaktadır.");
 }

@@ -11,16 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchSample.Infrastructure.Tokens
 {
-    public class TokenService : ITokenService
+    internal class TokenService(IOptions<TokenSettings> tokenSettingsOptions, UserManager<User> userManager)
+        : ITokenService
     {
-        private readonly TokenSettings _tokenSettings;
-        private readonly UserManager<User> _userManager;
-
-        public TokenService(IOptions<TokenSettings> tokenSettingsOptions, UserManager<User> userManager)
-        {
-            _tokenSettings = tokenSettingsOptions.Value;
-            _userManager = userManager;
-        }
+        private readonly TokenSettings _tokenSettings = tokenSettingsOptions.Value;
 
         public async Task<TokenModel> CreateTokenModel(User user, IList<string> roles)
         {
@@ -33,13 +27,13 @@ namespace CleanArchSample.Infrastructure.Tokens
                 RefreshTokenExpiry = DateTimeOffset.UtcNow.AddDays(_tokenSettings.RefreshTokenValidityInDays)
             };
         }
-        private async Task<string> CreateToken(User user, IList<string> roles)
+        private async Task<string> CreateToken(User user, IEnumerable<string> roles)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email,user.Email),
+                new(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new(JwtRegisteredClaimNames.Email,user.Email!),
             };
             foreach (var role in roles)
             {
@@ -54,17 +48,17 @@ namespace CleanArchSample.Infrastructure.Tokens
                 expires: DateTime.UtcNow.AddMinutes(_tokenSettings.TokenValidityInMinutes),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
-            var existingClaims = await _userManager.GetClaimsAsync(user);
+            var existingClaims = await userManager.GetClaimsAsync(user);
             var newClaims = claims.Where(r => !existingClaims.Select(rr => rr.Type).Contains(r.Type)).ToList();
             var oldClaims = existingClaims.Where(r => !claims.Select(rr => rr.Type).Contains(r.Type)).ToList();
-            if (oldClaims.Any())
-                await _userManager.RemoveClaimsAsync(user, oldClaims);
-            if (newClaims.Any())
-                await _userManager.AddClaimsAsync(user, newClaims);
+            if (oldClaims.Count != 0)
+                await userManager.RemoveClaimsAsync(user, oldClaims);
+            if (newClaims.Count != 0)
+                await userManager.AddClaimsAsync(user, newClaims);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private string GenerateRefreshToken()
+        private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
             using var rnd = RandomNumberGenerator.Create();

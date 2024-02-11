@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 
-public class GetAllBrandsQueryHandler : CqrsHandlerBase, IRequestHandler<GetAllBrandsQueryRequest, IReadOnlyList<GetAllBrandsQueryResponse>>
+internal class GetAllBrandsQueryHandler(
+    IUnitOfWork unitOfWork,
+    IMapper mapper,
+    IHttpContextAccessor httpContextAccessor)
+    : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor),
+        IRequestHandler<GetAllBrandsQueryRequest, IReadOnlyList<GetAllBrandsQueryResponse>>
 {
-    public GetAllBrandsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper,
-        IHttpContextAccessor httpContextAccessor) : base(unitOfWork, mapper, httpContextAccessor)
-    {
-    }
     public async Task<IReadOnlyList<GetAllBrandsQueryResponse>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {
         var brands = await UnitOfWork.GetReadRepository<Brand>()

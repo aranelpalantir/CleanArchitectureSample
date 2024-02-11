@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Revoke
 {
-    public class RevokeCommandValidator : AbstractValidator<RevokeCommandRequest>
+    internal class RevokeCommandValidator : AbstractValidator<RevokeCommandRequest>
     {
         public RevokeCommandValidator()
         {

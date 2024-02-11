@@ -3,7 +3,7 @@ using CleanArchSample.Domain.Entities;
 
 namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
 {
-    public class CreateProductCommandMapperProfile : Profile
+    internal class CreateProductCommandMapperProfile : Profile
     {
         public CreateProductCommandMapperProfile()
         {

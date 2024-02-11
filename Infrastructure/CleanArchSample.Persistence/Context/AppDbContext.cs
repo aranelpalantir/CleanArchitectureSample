@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Persistence.Context
 {
-    public class AppDbContext : IdentityDbContext<User, Role, Guid>
+    internal class AppDbContext : IdentityDbContext<User, Role, Guid>
     {
         public AppDbContext()
         {

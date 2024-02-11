@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
 {
-    public class RefreshTokenCommandHandler(
+    internal class RefreshTokenCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor,

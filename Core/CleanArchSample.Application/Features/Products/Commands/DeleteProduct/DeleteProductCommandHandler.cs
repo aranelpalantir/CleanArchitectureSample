@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Products.Commands.DeleteProduct
 {
-    public class DeleteProductCommandHandler : CqrsHandlerBase, IRequestHandler<DeleteProductCommandRequest, Unit>
+    internal class DeleteProductCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor)
+        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor), IRequestHandler<DeleteProductCommandRequest, Unit>
     {
-        public DeleteProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
-            IHttpContextAccessor httpContextAccessor) : base(unitOfWork, mapper, httpContextAccessor)
-        {
-        }
-
         public async Task<Unit> Handle(DeleteProductCommandRequest request, CancellationToken cancellationToken)
         {
             await UnitOfWork.GetWriteRepository<Product>().RemoveAsync(request.Id, cancellationToken);

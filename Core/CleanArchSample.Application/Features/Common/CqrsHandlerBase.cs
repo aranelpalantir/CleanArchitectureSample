@@ -5,19 +5,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Common
 {
-    public abstract class CqrsHandlerBase
+    internal abstract class CqrsHandlerBase(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor)
     {
-        protected readonly IUnitOfWork UnitOfWork;
-        protected readonly IMapper Mapper;
-        protected readonly IHttpContextAccessor HttpContextAccessor;
-        protected string? UserId;
-
-        protected CqrsHandlerBase(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-        {
-            UnitOfWork = unitOfWork;
-            Mapper = mapper;
-            HttpContextAccessor = httpContextAccessor;
-            UserId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
+        protected readonly IUnitOfWork UnitOfWork = unitOfWork;
+        protected readonly IMapper Mapper = mapper;
+        protected readonly IHttpContextAccessor HttpContextAccessor = httpContextAccessor;
+        protected string? UserId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }

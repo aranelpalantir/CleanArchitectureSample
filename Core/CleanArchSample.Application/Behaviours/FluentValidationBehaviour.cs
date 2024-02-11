@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CleanArchSample.Application.Behaviours
 {
-    public class FluentValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
+    internal class FluentValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
         : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
