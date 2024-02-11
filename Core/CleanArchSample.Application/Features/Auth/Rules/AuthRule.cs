@@ -6,17 +6,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Rules
 {
-    public class AuthRule : IBaseRule
+    public class AuthRule(UserManager<User> userManger) : IBaseRule
     {
-        private readonly UserManager<User> _userManager;
-
-        public AuthRule(UserManager<User> userManger)
-        {
-            _userManager = userManger;
-        }
         public async Task UserShouldNotBeExist(string email)
         {
-            if (await _userManager.FindByEmailAsync(email) is not null)
+            if (await userManger.FindByEmailAsync(email) is not null)
                 throw new UserAlreadyExistException();
         }
 
@@ -25,20 +19,25 @@ namespace CleanArchSample.Application.Features.Auth.Rules
             if (user == null)
                 throw new EmailOrPasswordShouldNotBeInvalidException();
 
-            var checkPassword = await _userManager.CheckPasswordAsync(user, password);
+            var checkPassword = await userManger.CheckPasswordAsync(user, password);
             if (!checkPassword)
                 throw new EmailOrPasswordShouldNotBeInvalidException();
         }
 
-        public Task RefreshTokenShouldNotBeExpired(DateTimeOffset? refreshTokenExpiry)
+        public static Task RefreshTokenShouldNotBeExpired(DateTimeOffset? refreshTokenExpiry)
         {
             if (refreshTokenExpiry <= DateTimeOffset.Now)
                 throw new RefreshTokenShouldNotBeExpiredException();
             return Task.CompletedTask;
         }
-        public Task EmailAddressShouldBeValid(User? user)
+        public static Task EmailAddressShouldBeValid(User? user)
         {
             if (user is null) throw new EmailAddressShouldBeValidException();
+            return Task.CompletedTask;
+        }
+        public static Task UserShouldBeExist(User? user)
+        {
+            if (user is null) throw new UserShouldBeExist();
             return Task.CompletedTask;
         }
     }

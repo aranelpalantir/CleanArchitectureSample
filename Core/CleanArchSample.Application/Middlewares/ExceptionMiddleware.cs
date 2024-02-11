@@ -5,14 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchSample.Application.Middlewares
 {
-    public class ExceptionMiddleware : IMiddleware
+    public class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : IMiddleware
     {
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        private static readonly string[] SystemError = ["System Error!"];
 
-        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
-        {
-            _logger = logger;
-        }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -21,12 +17,12 @@ namespace CleanArchSample.Application.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Global Error: {ex.Message}");
+                logger.LogError(ex, "Global Error: {ErrorMessage}", ex.Message);
                 await HandleException(context, ex);
             }
         }
 
-        private Task HandleException(HttpContext context, Exception exception)
+        private static Task HandleException(HttpContext context, Exception exception)
         {
             var statusCode = GetStatusCode(exception);
             context.Response.ContentType = "application/json";
@@ -48,7 +44,7 @@ namespace CleanArchSample.Application.Middlewares
 
             return context.Response.WriteAsync(new ExceptionModel
             {
-                Errors = new[] { "System Error!" },
+                Errors = SystemError,
                 StatusCode = statusCode
             }.ToString());
         }
