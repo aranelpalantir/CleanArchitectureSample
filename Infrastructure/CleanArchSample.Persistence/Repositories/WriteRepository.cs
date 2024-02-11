@@ -1,19 +1,14 @@
 ﻿using CleanArchSample.Application.Interfaces.Repositories;
 using CleanArchSample.Domain.Common;
+using CleanArchSample.Persistence.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Persistence.Repositories
 {
-    public class WriteRepository<T> : IWriteRepository<T> where T : class, IEntityBase, new()
+    internal class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T>
+        where T : class, IEntityBase, new()
     {
-        private readonly DbContext _dbContext;
-
-        public WriteRepository(DbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
-        private DbSet<T> Table => _dbContext.Set<T>();
+        private DbSet<T> Table => dbContext.Set<T>();
         public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             await Table.AddAsync(entity, cancellationToken);
@@ -31,7 +26,7 @@ namespace CleanArchSample.Persistence.Repositories
 
         public async Task RemoveAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
         {
-            var entity = await Table.FindAsync(new object[] { id }, cancellationToken);
+            var entity = await Table.FindAsync([id], cancellationToken) ?? throw new EntityNotFoundException();
             await Task.Run(() => Table.Remove(entity), cancellationToken);
         }
 

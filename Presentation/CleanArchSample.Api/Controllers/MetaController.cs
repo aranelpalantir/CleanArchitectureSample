@@ -4,12 +4,8 @@ using System.Reflection;
 
 namespace CleanArchSample.Api.Controllers
 {
-    public class MetaController : BaseApiController
+    public class MetaController(IMediator mediator) : BaseApiController(mediator)
     {
-        public MetaController(IMediator mediator) : base(mediator)
-        {
-            
-        }
         [HttpGet("/info")]
         public ActionResult<string> Info()
         {

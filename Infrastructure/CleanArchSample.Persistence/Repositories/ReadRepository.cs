@@ -6,17 +6,12 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace CleanArchSample.Persistence.Repositories
 {
-    public class ReadRepository<T> : IReadRepository<T> where T : class, IEntityBase, new()
+    internal class ReadRepository<T>(DbContext dbContext) : IReadRepository<T>
+        where T : class, IEntityBase, new()
     {
-        private readonly DbContext _dbContext;
+        private DbSet<T> Table => dbContext.Set<T>();
 
-        public ReadRepository(DbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-        private DbSet<T> Table => _dbContext.Set<T>();
-
-        private IQueryable<T> ApplyParameters(IQueryable<T> queryable, Expression<Func<T, bool>>? predicate = null,
+        private static IQueryable<T> ApplyParameters(IQueryable<T> queryable, Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = false)
         {
@@ -34,7 +29,7 @@ namespace CleanArchSample.Persistence.Repositories
         public async Task<IReadOnlyList<T>> ToListAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate, include, orderBy);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate, include, orderBy);
             return await queryable.ToListAsync(cancellationToken);
         }
 
@@ -42,35 +37,35 @@ namespace CleanArchSample.Persistence.Repositories
             int pageSize = 3, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate, include, orderBy);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate, include, orderBy);
             return await queryable.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
         }
 
         public async Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
             return await queryable.SingleOrDefaultAsync(cancellationToken);
         }
 
         public async Task<T> SingleAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
             return await queryable.SingleAsync(cancellationToken);
         }
 
         public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
             return await queryable.FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<T> FirstAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate, include, enableTracking: enableTracking);
             return await queryable.FirstAsync(cancellationToken);
         }
 
@@ -82,14 +77,14 @@ namespace CleanArchSample.Persistence.Repositories
         public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate);
             return await queryable.CountAsync(cancellationToken);
         }
 
         public async Task<bool> AnyAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
             var queryable = Table.AsQueryable();
-            queryable = ApplyParameters(queryable, predicate);
+            queryable = ReadRepository<T>.ApplyParameters(queryable, predicate);
             return await queryable.AnyAsync(cancellationToken);
         }
     }

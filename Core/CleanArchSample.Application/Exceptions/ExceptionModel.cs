@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Exceptions
 {
-    public class ExceptionModel
+    internal class ExceptionModel
     {
         public int StatusCode { get; set; }
         public IEnumerable<string>? Errors { get; set; }

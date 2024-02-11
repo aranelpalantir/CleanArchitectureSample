@@ -2,11 +2,5 @@
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions
 {
-    public class UserAlreadyExistException : BaseRuleException
-    {
-        public UserAlreadyExistException() : base("Böyle bir kullanıcı zaten var!")
-        {
-
-        }
-    }
+    internal class UserAlreadyExistException() : BaseRuleException("Böyle bir kullanıcı zaten var!");
 }

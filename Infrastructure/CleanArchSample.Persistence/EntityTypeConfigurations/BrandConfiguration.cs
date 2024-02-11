@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchSample.Persistence.EntityTypeConfigurations
 {
-    public class BrandConfiguration : IEntityTypeConfiguration<Brand>
+    internal class BrandConfiguration : IEntityTypeConfiguration<Brand>
     {
         public void Configure(EntityTypeBuilder<Brand> builder)
         {

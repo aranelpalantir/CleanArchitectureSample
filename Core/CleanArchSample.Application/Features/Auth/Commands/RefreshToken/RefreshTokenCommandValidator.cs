@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
 {
-    public class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommandRequest>
+    internal class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommandRequest>
     {
         public RefreshTokenCommandValidator()
         {

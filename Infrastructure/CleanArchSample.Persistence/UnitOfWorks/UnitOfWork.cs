@@ -6,27 +6,24 @@ using CleanArchSample.Persistence.Repositories;
 
 namespace CleanArchSample.Persistence.UnitOfWorks
 {
-    public class UnitOfWork : IUnitOfWork
+    internal class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
     {
-        private readonly AppDbContext _dbContext;
-
-        public UnitOfWork(AppDbContext dbContext)
+        public async ValueTask DisposeAsync()
         {
-            _dbContext = dbContext;
+            await dbContext.DisposeAsync();
+            GC.SuppressFinalize(this);
         }
 
-        public async ValueTask DisposeAsync() => await _dbContext.DisposeAsync();
-
         public IReadRepository<T> GetReadRepository<T>() where T : class, IEntityBase, new() =>
-            new ReadRepository<T>(_dbContext);
+            new ReadRepository<T>(dbContext);
 
 
         public IWriteRepository<T> GetWriteRepository<T>() where T : class, IEntityBase, new() =>
-            new WriteRepository<T>(_dbContext);
+            new WriteRepository<T>(dbContext);
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return await _dbContext.SaveChangesAsync(cancellationToken);
+            return await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

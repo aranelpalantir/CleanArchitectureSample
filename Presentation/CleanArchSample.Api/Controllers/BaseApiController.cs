@@ -5,13 +5,8 @@ namespace CleanArchSample.Api.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
-    public abstract class BaseApiController : ControllerBase
+    public abstract class BaseApiController(IMediator mediator) : ControllerBase
     {
-        protected readonly IMediator Mediator;
-
-        protected BaseApiController(IMediator mediator)
-        {
-            Mediator = mediator;
-        }
+        protected readonly IMediator Mediator = mediator;
     }
 }

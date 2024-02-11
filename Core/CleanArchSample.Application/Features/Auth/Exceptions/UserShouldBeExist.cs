@@ -2,11 +2,5 @@
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions
 {
-    public class UserShouldBeExist : BaseRuleException
-    {
-        public UserShouldBeExist() : base("Kullanıcı bulunamadı!")
-        {
-
-        }
-    }
+    internal class UserShouldBeExist() : BaseRuleException("Kullanıcı bulunamadı!");
 }

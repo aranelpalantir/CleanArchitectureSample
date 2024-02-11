@@ -1,15 +1,9 @@
 ﻿namespace CleanArchSample.Application.Exceptions
 {
-    public class BaseRuleException : ApplicationException
+    internal class BaseRuleException : ApplicationException
     {
-        public BaseRuleException()
-        {
+        public BaseRuleException() { }
 
-        }
-
-        public BaseRuleException(string message) : base(message)
-        {
-
-        }
+        public BaseRuleException(string message) : base(message) { }
     }
 }

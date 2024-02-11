@@ -10,32 +10,25 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Login
 {
-    internal class LoginCommandHandler : CqrsHandlerBase, IRequestHandler<LoginCommandRequest, LoginCommandResponse>
+    internal class LoginCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        UserManager<User> userManager,
+        AuthRule authRule,
+        ITokenService tokenService)
+        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor),
+            IRequestHandler<LoginCommandRequest, LoginCommandResponse>
     {
-        private readonly UserManager<User> _userManager;
-        private readonly AuthRule _authRule;
-        private readonly ITokenService _tokenService;
-
-        public LoginCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
-            IHttpContextAccessor httpContextAccessor,
-            UserManager<User> userManager,
-            AuthRule authRule,
-            ITokenService tokenService) : base(unitOfWork, mapper, httpContextAccessor)
-        {
-            _userManager = userManager;
-            _authRule = authRule;
-            _tokenService = tokenService;
-        }
-
         public async Task<LoginCommandResponse> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            await _authRule.EMailOrPasswordShouldNotBeInvalid(user, request.Password);
-            var roles = await _userManager.GetRolesAsync(user);
-            var tokenModel = await _tokenService.CreateTokenModel(user, roles);
-            user.RefreshToken = tokenModel.RefreshToken;
+            var user = await userManager.FindByEmailAsync(request.Email!);
+            await authRule.EMailOrPasswordShouldNotBeInvalid(user, request.Password!);
+            var roles = await userManager.GetRolesAsync(user!);
+            var tokenModel = await tokenService.CreateTokenModel(user!, roles);
+            user!.RefreshToken = tokenModel.RefreshToken;
             user.RefreshTokenExpiry = tokenModel.RefreshTokenExpiry;
-            await _userManager.SetAuthenticationTokenAsync(user, "Default", "AccessToken", tokenModel.Token);
+            await userManager.SetAuthenticationTokenAsync(user, "Default", "AccessToken", tokenModel.Token);
             return new LoginCommandResponse
             {
                 Token = tokenModel.Token,

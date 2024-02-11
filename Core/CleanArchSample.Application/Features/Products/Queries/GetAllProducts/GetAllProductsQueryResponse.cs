@@ -2,12 +2,12 @@
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
 {
-    public class GetAllProductsQueryResponse
+    internal class GetAllProductsQueryResponse
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
         public decimal Price { get; set; }
         public decimal Discount { get; set; }
-        public BrandDto Brand { get; set; }
+        public BrandDto? Brand { get; set; }
     }
 }

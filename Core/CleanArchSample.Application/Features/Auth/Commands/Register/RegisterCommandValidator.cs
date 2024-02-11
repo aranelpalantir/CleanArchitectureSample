@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Register
 {
-    public class RegisterCommandValidator : AbstractValidator<RegisterCommandRequest>
+    internal class RegisterCommandValidator : AbstractValidator<RegisterCommandRequest>
     {
         public RegisterCommandValidator()
         {

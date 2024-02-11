@@ -1,19 +1,14 @@
 ﻿namespace CleanArchSample.Application.Attributes
 {
 
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class RedisCacheAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class)]
+    internal class RedisCacheAttribute(int cacheSeconds) : Attribute
     {
         private const int DefaultCacheSeconds = 15;
-        public int CacheSeconds { get; }
+        public int CacheSeconds { get; } = cacheSeconds;
 
-        public RedisCacheAttribute()
+        public RedisCacheAttribute() : this(DefaultCacheSeconds)
         {
-            CacheSeconds = DefaultCacheSeconds;
-        }
-        public RedisCacheAttribute(int cacheSeconds)
-        {
-            CacheSeconds = cacheSeconds;
         }
     }
 }
