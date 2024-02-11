@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchSample.Application.Middlewares
 {
-    internal class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : IMiddleware
+    internal sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : IMiddleware
     {
         private static readonly string[] SystemError = ["System Error!"];
 

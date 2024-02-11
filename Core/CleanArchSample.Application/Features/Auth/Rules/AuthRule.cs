@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Rules
 {
-    internal class AuthRule(UserManager<User> userManger) : IBaseRule
+    internal sealed class AuthRule(UserManager<User> userManger) : IBaseRule
     {
         public async Task UserShouldNotBeExist(string email)
         {

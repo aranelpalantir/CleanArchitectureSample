@@ -1,6 +1,6 @@
 ﻿namespace CleanArchSample.Infrastructure.RedisCache
 {
-    internal class RedisCacheSettings
+    internal sealed class RedisCacheSettings
     {
         public required string Configuration { get; set; }
         public required string InstanceName { get; set; }

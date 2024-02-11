@@ -2,6 +2,7 @@
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using CleanArchSample.Persistence.Context;
+using CleanArchSample.Persistence.Interceptors;
 using CleanArchSample.Persistence.Repositories;
 using CleanArchSample.Persistence.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,12 @@ namespace CleanArchSample.Persistence
     {
         public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(opt =>
-                opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<UpdateAuditableInterceptor>();
+            services.AddDbContext<AppDbContext>((sp, opt) =>
+            {
+                opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                opt.AddInterceptors(sp.GetRequiredService<UpdateAuditableInterceptor>());
+            });
 
             services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
             services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));

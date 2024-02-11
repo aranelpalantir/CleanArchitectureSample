@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
 {
-    internal class GetAllProductsQueryHandler(
+    internal sealed class GetAllProductsQueryHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor)

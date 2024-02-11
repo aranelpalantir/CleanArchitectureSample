@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchSample.Infrastructure.Tokens
 {
-    internal class TokenService(IOptions<TokenSettings> tokenSettingsOptions, UserManager<User> userManager)
+    internal sealed class TokenService(IOptions<TokenSettings> tokenSettingsOptions, UserManager<User> userManager)
         : ITokenService
     {
         private readonly TokenSettings _tokenSettings = tokenSettingsOptions.Value;
@@ -33,6 +33,7 @@ namespace CleanArchSample.Infrastructure.Tokens
             {
                 new(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new(ClaimTypes.Name,user.UserName!),
                 new(JwtRegisteredClaimNames.Email,user.Email!),
             };
             foreach (var role in roles)

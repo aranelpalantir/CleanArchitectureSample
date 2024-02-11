@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.RevokeAll
 {
-    internal class RevokeAllCommandHandler(
+    internal sealed class RevokeAllCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor,

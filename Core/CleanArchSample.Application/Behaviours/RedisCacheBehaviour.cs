@@ -5,7 +5,7 @@ using MediatR;
 
 namespace CleanArchSample.Application.Behaviours
 {
-    internal class RedisCacheBehaviour<TRequest, TResponse>(IRedisCacheService redisCacheService)
+    internal sealed class RedisCacheBehaviour<TRequest, TResponse>(IRedisCacheService redisCacheService)
         : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {

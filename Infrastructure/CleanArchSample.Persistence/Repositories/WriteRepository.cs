@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Persistence.Repositories
 {
-    internal class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T>
+    internal sealed class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T>
         where T : class, IEntityBase, new()
     {
         private DbSet<T> Table => dbContext.Set<T>();

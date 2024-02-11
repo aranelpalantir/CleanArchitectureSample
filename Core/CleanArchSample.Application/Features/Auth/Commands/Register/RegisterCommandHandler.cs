@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Register
 {
-    internal class RegisterCommandHandler(
+    internal sealed class RegisterCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor,

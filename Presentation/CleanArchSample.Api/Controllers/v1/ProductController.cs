@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CleanArchSample.Api.Controllers.v1
 {
     [ApiVersion("1.0")]
+    [Authorize]
     public class ProductController(IMediator mediator) : BaseApiController(mediator)
     {
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {

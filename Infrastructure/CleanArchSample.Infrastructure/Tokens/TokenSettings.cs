@@ -1,6 +1,6 @@
 ﻿namespace CleanArchSample.Infrastructure.Tokens
 {
-    internal class TokenSettings
+    internal sealed class TokenSettings
     {
         public required string Audience { get; set; }
         public required string Issuer { get; set; }

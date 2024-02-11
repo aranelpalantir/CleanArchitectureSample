@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchSample.Persistence.EntityTypeConfigurations
 {
-    internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
+    internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Products.Commands.DeleteProduct
 {
-    internal class DeleteProductCommandHandler(
+    internal sealed class DeleteProductCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor)

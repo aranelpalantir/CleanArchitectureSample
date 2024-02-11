@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchSample.Persistence.EntityTypeConfigurations
 {
-    internal class DetailConfiguration : IEntityTypeConfiguration<Detail>
+    internal sealed class DetailConfiguration : IEntityTypeConfiguration<Detail>
     {
         public void Configure(EntityTypeBuilder<Detail> builder)
         {

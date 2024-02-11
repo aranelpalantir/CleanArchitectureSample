@@ -2,5 +2,5 @@
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions
 {
-    internal class RefreshTokenShouldNotBeExpiredException() : BaseRuleException("Oturum süreniz dolmuştur!");
+    internal sealed class RefreshTokenShouldNotBeExpiredException() : BaseRuleException("Oturum süreniz dolmuştur!");
 }

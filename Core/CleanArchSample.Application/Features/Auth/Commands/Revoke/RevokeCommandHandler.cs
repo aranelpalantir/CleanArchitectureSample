@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Revoke
 {
-    internal class RevokeCommandHandler(
+    internal sealed class RevokeCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor,
