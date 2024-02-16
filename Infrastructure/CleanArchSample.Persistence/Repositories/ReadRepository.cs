@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using CleanArchSample.Application.Interfaces.Repositories;
-using CleanArchSample.Domain.Common;
+using CleanArchSample.Domain.Primitives;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 

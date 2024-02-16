@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using CleanArchSample.Domain.Common;
 using Microsoft.AspNetCore.Http;
+using CleanArchSample.Domain.Primitives;
 
 namespace CleanArchSample.Persistence.Interceptors
 {

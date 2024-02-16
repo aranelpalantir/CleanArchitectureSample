@@ -1,6 +1,6 @@
 ﻿using CleanArchSample.Application.Interfaces.Repositories;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
-using CleanArchSample.Domain.Common;
+using CleanArchSample.Domain.Primitives;
 using CleanArchSample.Persistence.Context;
 using CleanArchSample.Persistence.Repositories;
 

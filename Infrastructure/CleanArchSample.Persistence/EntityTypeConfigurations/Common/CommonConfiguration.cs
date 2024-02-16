@@ -1,4 +1,4 @@
-﻿using CleanArchSample.Domain.Common;
+﻿using CleanArchSample.Domain.Primitives;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchSample.Persistence.EntityTypeConfigurations.Common

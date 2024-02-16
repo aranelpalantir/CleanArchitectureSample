@@ -1,4 +1,4 @@
-﻿namespace CleanArchSample.Domain.Common
+﻿namespace CleanArchSample.Domain.Primitives
 {
     public interface IEntityBase
     {

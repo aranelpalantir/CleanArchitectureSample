@@ -1,8 +1,8 @@
-﻿using CleanArchSample.Domain.Common;
+﻿using CleanArchSample.Domain.Primitives;
 
 namespace CleanArchSample.Domain.Entities
 {
-    public class Detail : EntityBase
+    public class Detail() : EntityBase()
     {
         public string Title { get; set; }
         public string Description { get; set; }

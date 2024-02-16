@@ -1,4 +1,4 @@
-﻿using CleanArchSample.Domain.Common;
+﻿using CleanArchSample.Domain.Primitives;
 
 namespace CleanArchSample.Domain.Entities
 {

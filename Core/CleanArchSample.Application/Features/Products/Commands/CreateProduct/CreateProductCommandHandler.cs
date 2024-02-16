@@ -2,6 +2,7 @@
 using CleanArchSample.Application.Features.Common;
 using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
+using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,8 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
     internal sealed class CreateProductCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IPublisher publisher)
         : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor), IRequestHandler<CreateProductCommandRequest, Unit>
     {
         public async Task<Unit> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
@@ -32,6 +34,8 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
             }
             await UnitOfWork.SaveChangesAsync(cancellationToken);
 
+            await publisher.Publish(new ProductCreatedDomainEvent(product.Id), cancellationToken);
+         
             return Unit.Value;
         }
 
