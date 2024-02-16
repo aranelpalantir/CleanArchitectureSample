@@ -20,6 +20,13 @@ namespace CleanArchSample.Infrastructure
             services.AddTransient<IRedisCacheService, RedisCacheService>();
 
             var serviceScopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
+            RedisCacheSettings redisCacheSettings;
+            ITokenService tokenService;
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
+                redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
+                tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
+            }
 
             services.AddAuthentication(opt =>
             {
@@ -27,21 +34,16 @@ namespace CleanArchSample.Infrastructure
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
             {
-                using var scope = serviceScopeFactory.CreateScope();
-                var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
                 opt.SaveToken = true;
                 opt.TokenValidationParameters = tokenService.GetTokenValidationParameters();
             });
             services.AddStackExchangeRedisCache(opt =>
             {
-                using var scope = serviceScopeFactory.CreateScope();
-                var redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
                 opt.Configuration = redisCacheSettings.Configuration;
                 opt.InstanceName = redisCacheSettings.InstanceName;
             });
             services.AddSingleton<IConnectionMultiplexer>(cfg =>
             {
-                var redisCacheSettings = cfg.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
                 var multiplexer = ConnectionMultiplexer.Connect(redisCacheSettings.Configuration, opt =>
                 {
                     opt.ConnectTimeout = 1000;
@@ -55,9 +57,6 @@ namespace CleanArchSample.Infrastructure
                 var connectionMultiplexer = cfg.GetRequiredService<IConnectionMultiplexer>();
                 return connectionMultiplexer.GetDatabase();
             });
-
-            using var scope = serviceScopeFactory.CreateScope();
-            var redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
 
             services.AddHealthChecks()
                 .AddSqlServer(configuration.GetConnectionString("DefaultConnection")!)
