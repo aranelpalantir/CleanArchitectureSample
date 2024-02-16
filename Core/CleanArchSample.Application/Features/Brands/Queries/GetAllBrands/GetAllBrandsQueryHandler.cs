@@ -1,25 +1,21 @@
 ﻿using AutoMapper;
-using CleanArchSample.Application.Features.Common;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 
 internal sealed class GetAllBrandsQueryHandler(
     IUnitOfWork unitOfWork,
-    IMapper mapper,
-    IHttpContextAccessor httpContextAccessor)
-    : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor),
-        IRequestHandler<GetAllBrandsQueryRequest, IReadOnlyList<GetAllBrandsQueryResponse>>
+    IMapper mapper) :
+    IRequestHandler<GetAllBrandsQueryRequest, IReadOnlyList<GetAllBrandsQueryResponse>>
 {
     public async Task<IReadOnlyList<GetAllBrandsQueryResponse>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {
-        var brands = await UnitOfWork.GetReadRepository<Brand>()
+        var brands = await unitOfWork.GetReadRepository<Brand>()
             .ToListAsync(cancellationToken: cancellationToken);
 
-        var response = Mapper.Map<IReadOnlyList<Brand>, IReadOnlyList<GetAllBrandsQueryResponse>>(brands);
+        var response = mapper.Map<IReadOnlyList<Brand>, IReadOnlyList<GetAllBrandsQueryResponse>>(brands);
 
         return response;
     }

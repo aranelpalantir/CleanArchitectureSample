@@ -1,22 +1,17 @@
-﻿using AutoMapper;
-using Bogus;
-using CleanArchSample.Application.Features.Common;
+﻿using Bogus;
 using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Application.Features.Brands.Commands
 {
     internal sealed class CreateBrandCommandHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IHttpContextAccessor httpContextAccessor)
-        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor), IRequestHandler<CreateBrandCommandRequest, Unit>
+        IUnitOfWork unitOfWork)
+        : IRequestHandler<CreateBrandCommandRequest, Unit>
     {
         public async Task<Unit> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
         {
-            if (await UnitOfWork.GetReadRepository<Brand>().CountAsync(cancellationToken: cancellationToken) >= 1000000)
+            if (await unitOfWork.GetReadRepository<Brand>().CountAsync(cancellationToken: cancellationToken) >= 1000000)
                 return Unit.Value;
             Faker faker = new("tr");
             List<Brand> brands = [];
@@ -28,8 +23,8 @@ namespace CleanArchSample.Application.Features.Brands.Commands
                 });
             }
 
-            await UnitOfWork.GetWriteRepository<Brand>().AddRangeAsync(brands, cancellationToken);
-            await UnitOfWork.SaveChangesAsync(cancellationToken);
+            await unitOfWork.GetWriteRepository<Brand>().AddRangeAsync(brands, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

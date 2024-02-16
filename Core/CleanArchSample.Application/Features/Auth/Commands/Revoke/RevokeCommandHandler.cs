@@ -1,20 +1,13 @@
-﻿using AutoMapper;
-using CleanArchSample.Application.Features.Auth.Rules;
-using CleanArchSample.Application.Features.Common;
-using CleanArchSample.Application.Interfaces.UnitOfWorks;
+﻿using CleanArchSample.Application.Features.Auth.Rules;
 using CleanArchSample.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Revoke
 {
     internal sealed class RevokeCommandHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IHttpContextAccessor httpContextAccessor,
         UserManager<User> userManager)
-        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor), IRequestHandler<RevokeCommandRequest, Unit>
+        :  IRequestHandler<RevokeCommandRequest, Unit>
     {
         public async Task<Unit> Handle(RevokeCommandRequest request, CancellationToken cancellationToken)
         {
