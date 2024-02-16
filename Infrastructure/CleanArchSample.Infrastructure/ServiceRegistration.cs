@@ -75,7 +75,7 @@ namespace CleanArchSample.Infrastructure
                         payload: "{ message: \"Webhook report for [[LIVENESS]]: [[FAILURE]] - Description: [[DESCRIPTIONS]]\"}",
                         restorePayload: "{ message: \"[[LIVENESS]] is back to life\"}");
                     setup.SetNotifyUnHealthyOneTimeUntilChange(); // You will only receive one failure notification until the status changes.
-        }).AddInMemoryStorage();
+                }).AddInMemoryStorage();
         }
     }
 }

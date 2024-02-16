@@ -11,7 +11,7 @@ namespace CleanArchSample.Persistence.Context
         {
 
         }
-        public AppDbContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
         public DbSet<Brand> Brands { get; set; }

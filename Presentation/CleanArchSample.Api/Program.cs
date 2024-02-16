@@ -103,6 +103,7 @@ try
     app.UseHttpsRedirection();
 
     app.UseRouting()
+        .UseAuthorization()
         .UseEndpoints(config => config.MapHealthChecksUI(opt =>
         {
             opt.UIPath = "/health-ui";
@@ -113,8 +114,6 @@ try
     });
 
     app.ConfigureApplicationMiddleware();
-
-    app.UseAuthorization();
 
     app.MapControllers();
     app.Run();
