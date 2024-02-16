@@ -1,25 +1,16 @@
-﻿using AutoMapper;
-using CleanArchSample.Application.Features.Auth.Rules;
-using CleanArchSample.Application.Features.Common;
+﻿using CleanArchSample.Application.Features.Auth.Rules;
 using CleanArchSample.Application.Interfaces.Tokens;
-using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
 {
     internal sealed class RefreshTokenCommandHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IHttpContextAccessor httpContextAccessor,
         UserManager<User> userManager,
-        ITokenService tokenService)
-        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor),
+        ITokenService tokenService) :
             IRequestHandler<RefreshTokenCommandRequest, RefreshTokenCommandResponse>
     {
-
         public async Task<RefreshTokenCommandResponse> Handle(RefreshTokenCommandRequest request, CancellationToken cancellationToken)
         {
             var user = userManager.Users.SingleOrDefault(r => r.RefreshToken == request.RefreshToken);

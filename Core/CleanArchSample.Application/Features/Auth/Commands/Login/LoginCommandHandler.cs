@@ -1,24 +1,16 @@
-﻿using AutoMapper;
-using CleanArchSample.Application.Features.Auth.Rules;
-using CleanArchSample.Application.Features.Common;
+﻿using CleanArchSample.Application.Features.Auth.Rules;
 using CleanArchSample.Application.Interfaces.Tokens;
-using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Commands.Login
 {
     internal sealed class LoginCommandHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IHttpContextAccessor httpContextAccessor,
         UserManager<User> userManager,
         AuthRule authRule,
-        ITokenService tokenService)
-        : CqrsHandlerBase(unitOfWork, mapper, httpContextAccessor),
-            IRequestHandler<LoginCommandRequest, LoginCommandResponse>
+        ITokenService tokenService) :
+        IRequestHandler<LoginCommandRequest, LoginCommandResponse>
     {
         public async Task<LoginCommandResponse> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
         {
