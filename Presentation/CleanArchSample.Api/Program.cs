@@ -2,6 +2,8 @@
 using CleanArchSample.Application;
 using CleanArchSample.Persistence;
 using CleanArchSample.Infrastructure;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -99,6 +101,16 @@ try
     }
 
     app.UseHttpsRedirection();
+
+    app.UseRouting()
+        .UseEndpoints(config => config.MapHealthChecksUI(opt =>
+        {
+            opt.UIPath = "/health-ui";
+        }));
+    app.MapHealthChecks("health", new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 
     app.ConfigureApplicationMiddleware();
 
