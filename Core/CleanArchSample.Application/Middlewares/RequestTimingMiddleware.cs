@@ -4,15 +4,15 @@ using System.Diagnostics;
 
 namespace CleanArchSample.Application.Middlewares
 {
-    internal sealed class RequestTimingMiddleware(ILogger<RequestTimingMiddleware> logger) : IMiddleware
+    internal sealed class RequestTimingMiddleware(RequestDelegate next)
     {
         private const int WarningThresholdMilliseconds = 3000;
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext httpContext, ILogger<RequestTimingMiddleware> logger)
         {
             var stopwatch = Stopwatch.StartNew();
 
-            await next(context);
+            await next(httpContext);
 
             stopwatch.Stop();
 
@@ -20,7 +20,7 @@ namespace CleanArchSample.Application.Middlewares
 
             if (elapsedMilliseconds > WarningThresholdMilliseconds)
             {
-                logger.LogWarning("Uzun süren istek: {ElapsedMilliseconds} ms - {RequestUrl}", elapsedMilliseconds, GetRequestUrl(context.Request));
+                logger.LogWarning("Uzun süren istek: {ElapsedMilliseconds} ms - {RequestUrl}", elapsedMilliseconds, GetRequestUrl(httpContext.Request));
             }
         }
 
