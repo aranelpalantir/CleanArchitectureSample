@@ -1,8 +1,8 @@
-﻿using CleanArchSample.Domain.Common;
+﻿using CleanArchSample.Domain.Primitives;
 
 namespace CleanArchSample.Domain.Entities
 {
-    public class Category : EntityBase
+    public class Category() : EntityBase()
     {
         public int ParentId { get; set; }
         public string Name { get; set; }

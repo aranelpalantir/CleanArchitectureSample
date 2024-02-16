@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using CleanArchSample.Domain.Common;
+using CleanArchSample.Domain.Primitives;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace CleanArchSample.Application.Interfaces.Repositories

@@ -1,5 +1,5 @@
 ﻿using CleanArchSample.Application.Interfaces.Repositories;
-using CleanArchSample.Domain.Common;
+using CleanArchSample.Domain.Primitives;
 
 namespace CleanArchSample.Application.Interfaces.UnitOfWorks
 {

@@ -1,8 +1,9 @@
-﻿using CleanArchSample.Domain.Common;
+﻿using CleanArchSample.Domain.Primitives;
+using MediatR;
 
 namespace CleanArchSample.Domain.Entities
 {
-    public class Product : EntityBase
+    public class Product() : EntityBase()
     {
         public string Title { get; set; }
         public string Description { get; set; }
