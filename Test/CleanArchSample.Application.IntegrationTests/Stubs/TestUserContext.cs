@@ -1,6 +1,6 @@
 ﻿using CleanArchSample.Application.Interfaces.Security;
 
-namespace CleanArchSample.Application.IntegrationTests
+namespace CleanArchSample.Application.IntegrationTests.Stubs
 {
     public class TestUserContext : IUserContext
     {

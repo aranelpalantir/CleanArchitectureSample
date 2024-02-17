@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Products.Queries.GetAllProducts
 {
-    internal sealed class GetAllProductsQueryResponse
+    public sealed class GetAllProductsQueryResponse
     {
         public string? Title { get; set; }
         public string? Description { get; set; }

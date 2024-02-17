@@ -1,6 +1,7 @@
 ﻿using CleanArchSample.Application.Features.Products.Commands.CreateProduct;
 using CleanArchSample.Application.Features.Products.Commands.DeleteProduct;
 using CleanArchSample.Application.Features.Products.Commands.UpdateProduct;
+using CleanArchSample.Application.IntegrationTests.Abstractions;
 using CleanArchSample.Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

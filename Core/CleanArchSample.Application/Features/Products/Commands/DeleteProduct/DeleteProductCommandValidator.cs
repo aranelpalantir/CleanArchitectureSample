@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Products.Commands.DeleteProduct
 {
-    internal sealed class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommandRequest>
+    public sealed class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommandRequest>
     {
         public DeleteProductCommandValidator()
         {

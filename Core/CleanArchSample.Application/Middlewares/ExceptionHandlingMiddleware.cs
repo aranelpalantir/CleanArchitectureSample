@@ -53,7 +53,7 @@ namespace CleanArchSample.Application.Middlewares
             exception switch
             {
                 ValidationException => StatusCodes.Status400BadRequest,
-                BaseRuleException => StatusCodes.Status422UnprocessableEntity,
+                BaseRuleException ruleException => (int)(ruleException.StatusCode),
                 BaseRepositoryException => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };

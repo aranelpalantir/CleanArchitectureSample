@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Products.Commands.UpdateProduct
 {
-    internal sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommandRequest>
+    public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommandRequest>
     {
         public UpdateProductCommandValidator()
         {
