@@ -5,6 +5,7 @@ using CleanArchSample.Application.Features.Products.Exceptions;
 using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Entities;
+using CleanArchSample.Domain.Repositories;
 using MediatR;
 using Moq;
 
@@ -13,6 +14,7 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
     public class CreateProductCommandHandlerTests
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+        private readonly Mock<IProductRepository> _productRepositoryMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
         private readonly Mock<IPublisher> _publisherMock = new();
         private readonly Mock<IProductRule> _productRuleMock = new();
@@ -31,7 +33,7 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
         }
         private CreateProductCommandHandler SetupProductCommandHandler()
         {
-            return new CreateProductCommandHandler(_unitOfWorkMock.Object, _mapperMock.Object, _publisherMock.Object, _productRuleMock.Object);
+            return new CreateProductCommandHandler(_unitOfWorkMock.Object, _productRepositoryMock.Object, _mapperMock.Object, _publisherMock.Object, _productRuleMock.Object);
         }
 
         [Fact]
@@ -55,9 +57,9 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
         {
             _mapperMock.Setup(m => m.Map<Product>(It.IsAny<CreateProductCommandRequest>())).Returns(new Product());
 
-            _unitOfWorkMock
-                .Setup(x => x.GetWriteRepository<Product>()
-                    .AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _productRepositoryMock
+                .Setup(x => 
+                    x.AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         }
         [Fact]
         public async Task Handle_Should_ReturnUnitValue_InIdealScenario()
@@ -90,8 +92,8 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
             await handler.Handle(command, default);
 
             //Assert
-            _unitOfWorkMock.Verify(x =>
-                x.GetWriteRepository<Product>().AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>()), Times.Once);
+            _productRepositoryMock.Verify(x =>
+                x.AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>()), Times.Once);
         }
         [Fact]
         public async Task Handle_Should_CallSaveChangesAsyncOnUnitOfWork_InIdealScenario()

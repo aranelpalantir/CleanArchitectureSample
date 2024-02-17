@@ -1,7 +1,4 @@
 ﻿using CleanArchSample.Application.Data;
-using CleanArchSample.Application.Interfaces.Repositories;
-using CleanArchSample.Domain.Primitives;
-using CleanArchSample.Persistence.Repositories;
 
 namespace CleanArchSample.Persistence.Context
 {
@@ -12,9 +9,6 @@ namespace CleanArchSample.Persistence.Context
             await dbContext.DisposeAsync();
             GC.SuppressFinalize(this);
         }
-
-        public IGenericWriteRepository<T> GetWriteRepository<T>() where T : class, IEntityBase, new() =>
-            new GenericWriteRepository<T>(dbContext);
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

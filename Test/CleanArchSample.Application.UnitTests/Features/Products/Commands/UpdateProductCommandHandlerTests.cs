@@ -14,7 +14,7 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
     public class UpdateProductCommandHandlerTests
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
-        private readonly Mock<IProductReadRepository> _productReadRepositoryMock = new();
+        private readonly Mock<IProductRepository> _productRepositoryMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
         private readonly Mock<IPublisher> _publisherMock = new();
         private readonly Mock<IProductRule> _productRuleMock = new();
@@ -33,7 +33,7 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
         }
         private UpdateProductCommandHandler SetupProductCommandHandler()
         {
-            return new UpdateProductCommandHandler(_unitOfWorkMock.Object, _mapperMock.Object, _publisherMock.Object, _productReadRepositoryMock.Object, _productRuleMock.Object);
+            return new UpdateProductCommandHandler(_unitOfWorkMock.Object, _productRepositoryMock.Object, _mapperMock.Object, _publisherMock.Object, _productRuleMock.Object);
         }
 
         [Fact]
@@ -41,8 +41,8 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
         {
             //Arrange
 
-            _productReadRepositoryMock
-                .Setup(x => x.GetById(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            _productRepositoryMock
+                .Setup(x => x.GetByIdWithProductCategories(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult<Product?>(null));
 
             var command = SetupProductCommandRequest();
@@ -60,8 +60,8 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
         {
             //Arrange
 
-            _productReadRepositoryMock
-                .Setup(x => x.GetById(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            _productRepositoryMock
+                .Setup(x => x.GetByIdWithProductCategories(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(new Product())!);
 
             _productRuleMock.Setup(x =>
@@ -79,15 +79,14 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
         }
         private void SetupMocksForInIdealScenario()
         {
-            _productReadRepositoryMock
-                .Setup(x => x.GetById(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            _productRepositoryMock
+                .Setup(x => x.GetByIdWithProductCategories(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(new Product())!);
 
             _mapperMock.Setup(m => m.Map<Product>(It.IsAny<UpdateProductCommandRequest>())).Returns(new Product());
 
-            _unitOfWorkMock
-                .Setup(x => x.GetWriteRepository<Product>()
-                    .AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _productRepositoryMock
+                .Setup(x => x.AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         }
         [Fact]
         public async Task Handle_Should_ReturnUnitValue_InIdealScenario()

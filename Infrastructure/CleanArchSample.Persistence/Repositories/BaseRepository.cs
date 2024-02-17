@@ -1,15 +1,22 @@
-﻿using CleanArchSample.Application.Interfaces.Repositories;
-using CleanArchSample.Domain.Primitives;
+﻿using CleanArchSample.Domain.Primitives;
+using CleanArchSample.Domain.Repositories;
 using CleanArchSample.Persistence.Context;
 using CleanArchSample.Persistence.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Persistence.Repositories
 {
-    internal sealed class GenericWriteRepository<T>(AppDbContext dbContext) : IGenericWriteRepository<T>
+    internal abstract class BaseRepository<T>(AppDbContext dbContext) : IRepository<T>
         where T : class, IEntityBase, new()
     {
-        private DbSet<T> Table => dbContext.Set<T>();
+        protected readonly AppDbContext DbContext = dbContext;
+        private DbSet<T> Table => DbContext.Set<T>();
+
+        public async Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
+        {
+            return await Table.FindAsync([id], cancellationToken);
+        }
+
         public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             await Table.AddAsync(entity, cancellationToken);

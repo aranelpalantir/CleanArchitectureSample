@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Domain.Repositories
 {
-    public interface IBrandReadRepository : IReadRepository
+    public interface IBrandRepository : IRepository<Brand>
     {
         Task<Product?> GetById(int id, CancellationToken cancellationToken);
         Task<IReadOnlyList<Brand>> GetAll(CancellationToken cancellationToken);
