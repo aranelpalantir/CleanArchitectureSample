@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  cleanarchsample.api:
+    image: ${DOCKER_REGISTRY-}cleanarchsampleapi
+    build:
+      context: .
+      dockerfile: Presentation/CleanArchSample.Api/Dockerfile
+    depends_on:
+      - mssql
+    networks:
+      - mynetwork
+
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+        SA_PASSWORD: "yourStrong(!)Password"
+        ACCEPT_EULA: "Y"
+    ports:
+        - "1434:1433"
+    volumes:
+        - mssql-data:/var/opt/mssql
+    networks:
+      - mynetwork
+
+volumes:
+    mssql-data:
+
+networks:
+  mynetwork:
+    driver: bridge

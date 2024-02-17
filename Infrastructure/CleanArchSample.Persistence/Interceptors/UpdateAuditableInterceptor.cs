@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using CleanArchSample.Domain.Primitives;
+using CleanArchSample.Application.Interfaces.Security;
 
 namespace CleanArchSample.Persistence.Interceptors
 {
-    internal sealed class UpdateAuditableInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
+    public sealed class UpdateAuditableInterceptor(IUserContext userContext) : SaveChangesInterceptor
     {
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
             DbContextEventData eventData,
@@ -41,11 +42,9 @@ namespace CleanArchSample.Persistence.Interceptors
             }
         }
 
-        private string? GetUserName()
+        private string GetUserName()
         {
-            return httpContextAccessor.HttpContext.User.Identity != null
-                ? httpContextAccessor.HttpContext.User.Identity.Name
-                : "-";
+            return userContext.UserName ?? "-";
         }
     }
 }

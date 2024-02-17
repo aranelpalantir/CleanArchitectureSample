@@ -8,6 +8,8 @@ using System.Reflection;
 using CleanArchSample.Application.Data;
 using CleanArchSample.Domain.Repositories;
 using CleanArchSample.Persistence.Repositories;
+using CleanArchSample.Application.Interfaces.Security;
+using Microsoft.Extensions.Options;
 
 namespace CleanArchSample.Persistence
 {
@@ -17,7 +19,9 @@ namespace CleanArchSample.Persistence
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            services.AddSingleton<UpdateAuditableInterceptor>();
+            services.AddScoped<IUserContext, HttpContextUserContext>();
+
+            services.AddScoped<UpdateAuditableInterceptor>();
             services.AddDbContext<AppDbContext>((sp, opt) =>
             {
                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
@@ -38,6 +42,7 @@ namespace CleanArchSample.Persistence
                 }).AddRoles<Role>()
                 .AddEntityFrameworkStores<AppDbContext>();
         }
+
         private static void AddReadRepositoriesFromAssemblyContaining(this IServiceCollection services, Assembly assembly)
         {
             var genericInterfaceType = typeof(IRepository<>);
@@ -54,5 +59,7 @@ namespace CleanArchSample.Persistence
                 services.AddScoped(interfaceType, concreteType);
             }
         }
+
+
     }
 }

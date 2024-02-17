@@ -1,4 +1,4 @@
-﻿namespace CleanArchSample.Infrastructure.Tokens
+﻿namespace CleanArchSample.Infrastructure.Security
 {
     internal sealed class TokenSettings
     {
