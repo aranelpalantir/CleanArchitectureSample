@@ -8,14 +8,15 @@ namespace CleanArchSample.Application.Features.Auth.Commands.RefreshToken
 {
     internal sealed class RefreshTokenCommandHandler(
         UserManager<User> userManager,
-        ITokenService tokenService) :
+        ITokenService tokenService,
+        IAuthRule authRule) :
             IRequestHandler<RefreshTokenCommandRequest, RefreshTokenCommandResponse>
     {
         public async Task<RefreshTokenCommandResponse> Handle(RefreshTokenCommandRequest request, CancellationToken cancellationToken)
         {
             var user = userManager.Users.SingleOrDefault(r => r.RefreshToken == request.RefreshToken);
-            await AuthRule.UserShouldBeExist(user);
-            await AuthRule.RefreshTokenShouldNotBeExpired(user!.RefreshTokenExpiry);
+            await authRule.UserShouldBeExist(user);
+            await authRule.RefreshTokenShouldNotBeExpired(user!.RefreshTokenExpiry);
 
             var roles = await userManager.GetRolesAsync(user);
             var tokenModel = await tokenService.CreateTokenModel(user, roles);

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace CleanArchSample.Application.Interfaces.Repositories
 {
-    public interface IReadRepository<T> where T : class, IEntityBase, new()
+    public interface IGenericReadRepository<T> where T : class, IEntityBase, new()
     {
         Task<IReadOnlyList<T>> ToListAsync(Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,

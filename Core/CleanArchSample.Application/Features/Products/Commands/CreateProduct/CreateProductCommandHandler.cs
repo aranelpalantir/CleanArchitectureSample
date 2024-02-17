@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using CleanArchSample.Application.Data;
 using CleanArchSample.Application.Features.Products.Rules;
-using CleanArchSample.Application.Interfaces.UnitOfWorks;
 using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Entities;
 using MediatR;
@@ -10,35 +10,39 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
     internal sealed class CreateProductCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IPublisher publisher) : 
+        IPublisher publisher,
+        IProductRule productRule) :
         IRequestHandler<CreateProductCommandRequest, Unit>
     {
         public async Task<Unit> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
         {
-            await ValidateRules(request, cancellationToken);
-
+            await ValidateProductRules(request, cancellationToken);
+            var product = MapToProductEntity(request);
+            await SaveProductToDatabase(product, cancellationToken);
+            await publisher.Publish(new ProductCreatedDomainEvent(product.Id), cancellationToken);
+            return Unit.Value;
+        }
+        private async Task ValidateProductRules(CreateProductCommandRequest request, CancellationToken cancellationToken)
+        {
+            await productRule.ProductTitleMustNotBeSame(request.Title!, cancellationToken);
+        }
+        private Product MapToProductEntity(CreateProductCommandRequest request)
+        {
             var product = mapper.Map<Product>(request);
-
-            await unitOfWork.GetWriteRepository<Product>().AddAsync(product, cancellationToken);
-
             foreach (var categoryId in request.CategoryIds)
             {
-                await unitOfWork.GetWriteRepository<ProductCategory>().AddAsync(new ProductCategory
+                product.ProductCategories.Add(new ProductCategory
                 {
                     Product = product,
                     CategoryId = categoryId
-                }, cancellationToken);
+                });
             }
-            await unitOfWork.SaveChangesAsync(cancellationToken);
-
-            await publisher.Publish(new ProductCreatedDomainEvent(product.Id), cancellationToken);
-         
-            return Unit.Value;
+            return product;
         }
-
-        private async Task ValidateRules(CreateProductCommandRequest request, CancellationToken cancellationToken)
+        private async Task SaveProductToDatabase(Product product, CancellationToken cancellationToken)
         {
-            await ProductRule.ProductTitleMustNotBeSame(unitOfWork.GetReadRepository<Product>(), request.Title!, cancellationToken);
+            await unitOfWork.GetWriteRepository<Product>().AddAsync(product, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

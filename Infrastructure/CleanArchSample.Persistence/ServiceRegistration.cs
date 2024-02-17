@@ -1,13 +1,15 @@
 ﻿using CleanArchSample.Application.Interfaces.Repositories;
-using CleanArchSample.Application.Interfaces.UnitOfWorks;
+using CleanArchSample.Application.Interfaces.Rules;
 using CleanArchSample.Domain.Entities;
 using CleanArchSample.Persistence.Context;
 using CleanArchSample.Persistence.Interceptors;
 using CleanArchSample.Persistence.Repositories;
-using CleanArchSample.Persistence.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using CleanArchSample.Application.Data;
+using CleanArchSample.Domain.Repositories;
 
 namespace CleanArchSample.Persistence
 {
@@ -15,6 +17,8 @@ namespace CleanArchSample.Persistence
     {
         public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
+            var assembly = Assembly.GetExecutingAssembly();
+
             services.AddSingleton<UpdateAuditableInterceptor>();
             services.AddDbContext<AppDbContext>((sp, opt) =>
             {
@@ -22,8 +26,9 @@ namespace CleanArchSample.Persistence
                 opt.AddInterceptors(sp.GetRequiredService<UpdateAuditableInterceptor>());
             });
 
-            services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
-            services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+            services.AddReadRepositoriesFromAssemblyContaining(assembly);
+            services.AddScoped(typeof(IGenericReadRepository<>), typeof(GenericReadRepository<>));
+            services.AddScoped(typeof(IGenericWriteRepository<>), typeof(GenericWriteRepository<>));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
             services.AddIdentityCore<User>(opt =>
@@ -36,6 +41,19 @@ namespace CleanArchSample.Persistence
                     opt.SignIn.RequireConfirmedEmail = false;
                 }).AddRoles<Role>()
                 .AddEntityFrameworkStores<AppDbContext>();
+        }
+        private static void AddReadRepositoriesFromAssemblyContaining(this IServiceCollection services, Assembly assembly)
+        {
+            var interfaceType = typeof(IReadRepository);
+            var types = assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i == interfaceType) && t.IsClass)
+                .ToList();
+
+            foreach (var type in types)
+            {
+                services.AddScoped(type.GetInterfaces().Single(i => i.GetInterfaces().Contains(interfaceType)),
+                    type);
+            }
         }
     }
 }

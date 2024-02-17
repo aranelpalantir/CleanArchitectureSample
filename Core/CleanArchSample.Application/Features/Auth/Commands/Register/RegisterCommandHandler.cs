@@ -8,7 +8,7 @@ namespace CleanArchSample.Application.Features.Auth.Commands.Register
 {
     internal sealed class RegisterCommandHandler(
         IMapper mapper,
-        AuthRule authRole,
+        IAuthRule authRole,
         UserManager<User> userManger,
         RoleManager<Role> roleManager)
         : IRequestHandler<RegisterCommandRequest, Unit>
@@ -19,7 +19,7 @@ namespace CleanArchSample.Application.Features.Auth.Commands.Register
             var user = mapper.Map<User>(request);
             user.UserName = request.Email;
             user.SecurityStamp = Guid.NewGuid().ToString();
-            IdentityResult result = await userManger.CreateAsync(user, request.Password!);
+            var result = await userManger.CreateAsync(user, request.Password!);
             if (result.Succeeded)
             {
                 if (!await roleManager.RoleExistsAsync("user"))

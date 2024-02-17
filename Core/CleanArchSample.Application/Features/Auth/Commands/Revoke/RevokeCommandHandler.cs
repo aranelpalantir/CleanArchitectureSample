@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Identity;
 namespace CleanArchSample.Application.Features.Auth.Commands.Revoke
 {
     internal sealed class RevokeCommandHandler(
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        IAuthRule authRule)
         :  IRequestHandler<RevokeCommandRequest, Unit>
     {
         public async Task<Unit> Handle(RevokeCommandRequest request, CancellationToken cancellationToken)
         {
             var user = await userManager.FindByEmailAsync(request.Email!);
-            await AuthRule.EmailAddressShouldBeValid(user);
+            await authRule.EmailAddressShouldBeValid(user);
             user!.RefreshToken = null;
             user.RefreshTokenExpiry = null;
             await userManager.UpdateAsync(user);

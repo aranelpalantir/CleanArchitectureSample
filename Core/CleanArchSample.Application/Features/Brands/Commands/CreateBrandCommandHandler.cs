@@ -1,17 +1,19 @@
 ﻿using Bogus;
-using CleanArchSample.Application.Interfaces.UnitOfWorks;
+using CleanArchSample.Application.Data;
 using CleanArchSample.Domain.Entities;
+using CleanArchSample.Domain.Repositories;
 using MediatR;
 
 namespace CleanArchSample.Application.Features.Brands.Commands
 {
     internal sealed class CreateBrandCommandHandler(
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IBrandReadRepository brandReadRepository)
         : IRequestHandler<CreateBrandCommandRequest, Unit>
     {
         public async Task<Unit> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
         {
-            if (await unitOfWork.GetReadRepository<Brand>().CountAsync(cancellationToken: cancellationToken) >= 1000000)
+            if (await brandReadRepository.CountAsync(cancellationToken: cancellationToken) >= 1000000)
                 return Unit.Value;
             Faker faker = new("tr");
             List<Brand> brands = [];

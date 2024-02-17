@@ -1,12 +1,11 @@
 ﻿using CleanArchSample.Application.Interfaces.Repositories;
 using CleanArchSample.Domain.Primitives;
 
-namespace CleanArchSample.Application.Interfaces.UnitOfWorks
+namespace CleanArchSample.Application.Data
 {
     public interface IUnitOfWork : IAsyncDisposable
     {
-        IReadRepository<T> GetReadRepository<T>() where T : class, IEntityBase, new();
-        IWriteRepository<T> GetWriteRepository<T>() where T : class, IEntityBase, new();
+        IGenericWriteRepository<T> GetWriteRepository<T>() where T : class, IEntityBase, new();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
