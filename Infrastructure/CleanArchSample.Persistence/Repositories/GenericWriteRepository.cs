@@ -1,11 +1,12 @@
 ﻿using CleanArchSample.Application.Interfaces.Repositories;
 using CleanArchSample.Domain.Primitives;
+using CleanArchSample.Persistence.Context;
 using CleanArchSample.Persistence.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Persistence.Repositories
 {
-    internal sealed class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T>
+    internal sealed class GenericWriteRepository<T>(AppDbContext dbContext) : IGenericWriteRepository<T>
         where T : class, IEntityBase, new()
     {
         private DbSet<T> Table => dbContext.Set<T>();

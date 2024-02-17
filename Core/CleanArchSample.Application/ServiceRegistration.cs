@@ -24,16 +24,20 @@ namespace CleanArchSample.Application
 
             services.AddValidatorsFromAssembly(assembly);
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("tr");
-            services.AddRulesFromAssembylContaining(assembly, typeof(IBaseRule));
+            services.AddRulesFromAssemblyContaining(assembly);
         }
 
-        private static void AddRulesFromAssembylContaining(this IServiceCollection services,
-            Assembly assembly, Type type)
+        private static void AddRulesFromAssemblyContaining(this IServiceCollection services, Assembly assembly)
         {
-            var types = assembly.GetTypes().Where(t => t.GetInterfaces().Contains(type)).ToList();
-            foreach (var item in types)
+            var interfaceType = typeof(IBaseRule);
+            var types = assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i == interfaceType) && t.IsClass)
+                .ToList();
+
+            foreach (var type in types)
             {
-                services.AddTransient(item);
+                services.AddScoped(type.GetInterfaces().Single(i => i.GetInterfaces().Contains(interfaceType)),
+                    type);
             }
         }
     }

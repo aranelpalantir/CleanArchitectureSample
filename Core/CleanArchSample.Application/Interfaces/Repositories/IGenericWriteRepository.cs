@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Interfaces.Repositories
 {
-    public interface IWriteRepository<T> where T : class, IEntityBase, new()
+    public interface IGenericWriteRepository<T> where T : class, IEntityBase, new()
     {
         Task AddAsync(T entity, CancellationToken cancellationToken = default);
         Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);

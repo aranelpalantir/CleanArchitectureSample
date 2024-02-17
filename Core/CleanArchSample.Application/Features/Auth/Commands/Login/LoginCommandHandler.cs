@@ -8,7 +8,7 @@ namespace CleanArchSample.Application.Features.Auth.Commands.Login
 {
     internal sealed class LoginCommandHandler(
         UserManager<User> userManager,
-        AuthRule authRule,
+        IAuthRule authRule,
         ITokenService tokenService) :
         IRequestHandler<LoginCommandRequest, LoginCommandResponse>
     {

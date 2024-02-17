@@ -1,11 +1,10 @@
 ﻿using CleanArchSample.Application.Features.Auth.Exceptions;
-using CleanArchSample.Application.Interfaces.Rules;
 using CleanArchSample.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchSample.Application.Features.Auth.Rules
 {
-    internal sealed class AuthRule(UserManager<User> userManger) : IBaseRule
+    internal sealed class AuthRule(UserManager<User> userManger) : IAuthRule
     {
         public async Task UserShouldNotBeExist(string email)
         {
@@ -23,18 +22,18 @@ namespace CleanArchSample.Application.Features.Auth.Rules
                 throw new EmailOrPasswordShouldNotBeInvalidException();
         }
 
-        public static Task RefreshTokenShouldNotBeExpired(DateTimeOffset? refreshTokenExpiry)
+        public Task RefreshTokenShouldNotBeExpired(DateTimeOffset? refreshTokenExpiry)
         {
             if (refreshTokenExpiry <= DateTimeOffset.Now)
                 throw new RefreshTokenShouldNotBeExpiredException();
             return Task.CompletedTask;
         }
-        public static Task EmailAddressShouldBeValid(User? user)
+        public Task EmailAddressShouldBeValid(User? user)
         {
             if (user is null) throw new EmailAddressShouldBeValidException();
             return Task.CompletedTask;
         }
-        public static Task UserShouldBeExist(User? user)
+        public Task UserShouldBeExist(User? user)
         {
             if (user is null) throw new UserShouldBeExist();
             return Task.CompletedTask;
