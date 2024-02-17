@@ -1,15 +1,13 @@
-﻿using CleanArchSample.Application.Interfaces.Repositories;
-using CleanArchSample.Application.Interfaces.Rules;
-using CleanArchSample.Domain.Entities;
+﻿using CleanArchSample.Domain.Entities;
 using CleanArchSample.Persistence.Context;
 using CleanArchSample.Persistence.Interceptors;
-using CleanArchSample.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using CleanArchSample.Application.Data;
 using CleanArchSample.Domain.Repositories;
+using CleanArchSample.Persistence.Repositories;
 
 namespace CleanArchSample.Persistence
 {
@@ -27,8 +25,6 @@ namespace CleanArchSample.Persistence
             });
 
             services.AddReadRepositoriesFromAssemblyContaining(assembly);
-            services.AddScoped(typeof(IGenericReadRepository<>), typeof(GenericReadRepository<>));
-            services.AddScoped(typeof(IGenericWriteRepository<>), typeof(GenericWriteRepository<>));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
             services.AddIdentityCore<User>(opt =>
@@ -44,15 +40,18 @@ namespace CleanArchSample.Persistence
         }
         private static void AddReadRepositoriesFromAssemblyContaining(this IServiceCollection services, Assembly assembly)
         {
-            var interfaceType = typeof(IReadRepository);
-            var types = assembly.GetTypes()
-                .Where(t => t.GetInterfaces().Any(i => i == interfaceType) && t.IsClass)
+            var genericInterfaceType = typeof(IRepository<>);
+            var concreteTypes = assembly.GetTypes()
+                .Where(t => t.GetInterfaces()
+                    .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericInterfaceType) && t != typeof(BaseRepository<>))
                 .ToList();
 
-            foreach (var type in types)
+            foreach (var concreteType in concreteTypes)
             {
-                services.AddScoped(type.GetInterfaces().Single(i => i.GetInterfaces().Contains(interfaceType)),
-                    type);
+                var interfaceType = concreteType.GetInterfaces()
+                    .Single(i => !i.IsGenericType);
+
+                services.AddScoped(interfaceType, concreteType);
             }
         }
     }

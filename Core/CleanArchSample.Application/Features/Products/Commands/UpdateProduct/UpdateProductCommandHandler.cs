@@ -11,9 +11,9 @@ namespace CleanArchSample.Application.Features.Products.Commands.UpdateProduct
 {
     internal sealed class UpdateProductCommandHandler(
         IUnitOfWork unitOfWork,
+        IProductRepository productRepository,
         IMapper mapper,
         IPublisher publisher,
-        IProductReadRepository productReadRepository,
         IProductRule productRule) :
         IRequestHandler<UpdateProductCommandRequest, Unit>
     {
@@ -34,7 +34,7 @@ namespace CleanArchSample.Application.Features.Products.Commands.UpdateProduct
 
         private async Task<Product> GetProductFromDataBase(int id, CancellationToken cancellationToken)
         {
-            var product = await productReadRepository.GetById(id, cancellationToken) ??
+            var product = await productRepository.GetByIdWithProductCategories(id, cancellationToken) ??
                           throw new ProductNotFoundException();
 
             return product;

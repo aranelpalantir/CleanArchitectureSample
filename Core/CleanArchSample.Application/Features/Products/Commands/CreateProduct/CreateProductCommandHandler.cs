@@ -3,12 +3,14 @@ using CleanArchSample.Application.Data;
 using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Entities;
+using CleanArchSample.Domain.Repositories;
 using MediatR;
 
 namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
 {
     internal sealed class CreateProductCommandHandler(
         IUnitOfWork unitOfWork,
+        IProductRepository productRepository,
         IMapper mapper,
         IPublisher publisher,
         IProductRule productRule) :
@@ -41,7 +43,7 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
         }
         private async Task SaveProductToDatabase(Product product, CancellationToken cancellationToken)
         {
-            await unitOfWork.GetWriteRepository<Product>().AddAsync(product, cancellationToken);
+            await productRepository.AddAsync(product, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

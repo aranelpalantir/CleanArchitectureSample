@@ -8,12 +8,12 @@ namespace CleanArchSample.Application.Features.Brands.Commands
 {
     internal sealed class CreateBrandCommandHandler(
         IUnitOfWork unitOfWork,
-        IBrandReadRepository brandReadRepository)
+        IBrandRepository brandRepository)
         : IRequestHandler<CreateBrandCommandRequest, Unit>
     {
         public async Task<Unit> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
         {
-            if (await brandReadRepository.CountAsync(cancellationToken: cancellationToken) >= 1000000)
+            if (await brandRepository.CountAsync(cancellationToken: cancellationToken) >= 1000000)
                 return Unit.Value;
             Faker faker = new("tr");
             List<Brand> brands = [];
@@ -25,7 +25,7 @@ namespace CleanArchSample.Application.Features.Brands.Commands
                 });
             }
 
-            await unitOfWork.GetWriteRepository<Brand>().AddRangeAsync(brands, cancellationToken);
+            await brandRepository.AddRangeAsync(brands, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }

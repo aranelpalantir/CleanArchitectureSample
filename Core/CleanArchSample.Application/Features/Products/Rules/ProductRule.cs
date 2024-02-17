@@ -1,14 +1,13 @@
 ﻿using CleanArchSample.Application.Features.Products.Exceptions;
-using CleanArchSample.Application.Interfaces.Repositories;
-using CleanArchSample.Domain.Entities;
+using CleanArchSample.Domain.Repositories;
 
 namespace CleanArchSample.Application.Features.Products.Rules
 {
-    internal class ProductRule(IGenericReadRepository<Product>repository) : IProductRule
+    internal class ProductRule(IProductRepository productRepository) : IProductRule
     {
         public async Task ProductTitleMustNotBeSame(string title, CancellationToken cancellationToken)
         {
-            if (await repository.AnyAsync(r => r.Title == title, cancellationToken))
+            if (await productRepository.IsProductTitleExistAsync(title, cancellationToken))
                 throw new ProductTitleMustNotBeSameException();
         }
     }
