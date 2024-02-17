@@ -1,5 +1,4 @@
-﻿using CleanArchSample.Application.Interfaces.Tokens;
-using CleanArchSample.Domain.Entities;
+﻿using CleanArchSample.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,8 +7,9 @@ using System.Security.Cryptography;
 using System.Text;
 using CleanArchSample.Application.Models;
 using Microsoft.IdentityModel.Tokens;
+using CleanArchSample.Application.Interfaces.Security;
 
-namespace CleanArchSample.Infrastructure.Tokens
+namespace CleanArchSample.Infrastructure.Security
 {
     internal sealed class TokenService(IOptions<TokenSettings> tokenSettingsOptions, UserManager<User> userManager)
         : ITokenService

@@ -1,6 +1,6 @@
 ﻿namespace CleanArchSample.Domain.Primitives;
 
-public class EntityBase() : IEntityBase
+public class EntityBase : IEntityBase
 {
     public int Id { get; set; }
     public DateTimeOffset CreatedDate { get; set; }

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using CleanArchSample.Application.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CleanArchSample.Application.Interfaces.Tokens
+namespace CleanArchSample.Application.Interfaces.Security
 {
     public interface ITokenService
     {

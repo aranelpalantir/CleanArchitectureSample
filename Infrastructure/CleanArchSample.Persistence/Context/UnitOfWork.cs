@@ -1,4 +1,5 @@
 ﻿using CleanArchSample.Application.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Persistence.Context
 {
@@ -12,7 +13,22 @@ namespace CleanArchSample.Persistence.Context
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return await dbContext.SaveChangesAsync(cancellationToken);
+            try
+            {
+                return await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException ex)
+            {
+                var innerException = ex.InnerException;
+                while (innerException != null)
+                {
+                    Console.WriteLine(innerException.Message);
+                    innerException = innerException.InnerException;
+                }
+
+                throw;
+            }
+
         }
     }
 }

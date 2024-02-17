@@ -1,12 +1,12 @@
-﻿using CleanArchSample.Application.Interfaces.Tokens;
-using CleanArchSample.Infrastructure.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using CleanArchSample.Application.Interfaces.RedisCache;
 using CleanArchSample.Infrastructure.RedisCache;
 using StackExchange.Redis;
+using CleanArchSample.Application.Interfaces.Security;
+using CleanArchSample.Infrastructure.Security;
 
 namespace CleanArchSample.Infrastructure
 {
@@ -27,7 +27,7 @@ namespace CleanArchSample.Infrastructure
                 redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
                 tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
             }
-
+            
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
