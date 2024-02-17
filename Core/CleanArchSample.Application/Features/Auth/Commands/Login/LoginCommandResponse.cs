@@ -1,6 +1,6 @@
 ﻿namespace CleanArchSample.Application.Features.Auth.Commands.Login
 {
-    internal sealed class LoginCommandResponse
+    public sealed class LoginCommandResponse
     {
         public string? Token { get; set; }
         public string? RefreshToken { get; set; }

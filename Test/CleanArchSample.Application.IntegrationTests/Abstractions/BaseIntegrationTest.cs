@@ -1,9 +1,8 @@
 ﻿using CleanArchSample.Persistence.Context;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanArchSample.Application.IntegrationTests
+namespace CleanArchSample.Application.IntegrationTests.Abstractions
 {
     public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>
     {

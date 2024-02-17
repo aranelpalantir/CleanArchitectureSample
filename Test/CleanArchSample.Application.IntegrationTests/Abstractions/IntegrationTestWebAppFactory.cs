@@ -1,21 +1,19 @@
-﻿using CleanArchSample.Application.Interfaces.Security;
-using CleanArchSample.Persistence.Context;
-using CleanArchSample.Persistence.Interceptors;
+﻿using CleanArchSample.Application.IntegrationTests.Stubs;
+using CleanArchSample.Application.Interfaces.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
 
-namespace CleanArchSample.Application.IntegrationTests;
+namespace CleanArchSample.Application.IntegrationTests.Abstractions;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2019-latest")
-        .WithPortBinding(1435,1433)
+        .WithPortBinding(1435, 1433)
         .WithPassword("ah+beM-]<g)$[}")
         .Build();
 
