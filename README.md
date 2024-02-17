@@ -1,1 +1,1 @@
-# CleanArchSample
+# Clean Architecture Sample
