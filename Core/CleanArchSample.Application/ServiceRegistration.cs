@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Reflection;
+using CleanArchSample.Application.Abstractions.BusinessRule;
 using CleanArchSample.Application.Behaviours;
-using CleanArchSample.Application.Interfaces.Rules;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +17,7 @@ namespace CleanArchSample.Application
             {
                 cfg.RegisterServicesFromAssembly(assembly);
                 cfg.AddOpenBehavior(typeof(FluentValidationBehaviour<,>));
-                cfg.AddOpenBehavior(typeof(RedisCacheBehaviour<,>));
+                cfg.AddOpenBehavior(typeof(RequestCacheBehaviour<,>));
             });
 
             services.AddAutoMapper(assembly);
@@ -29,7 +29,7 @@ namespace CleanArchSample.Application
 
         private static void AddRulesFromAssemblyContaining(this IServiceCollection services, Assembly assembly)
         {
-            var interfaceType = typeof(IBaseRule);
+            var interfaceType = typeof(IBaseBusinessRule);
             var types = assembly.GetTypes()
                 .Where(t => t.GetInterfaces().Any(i => i == interfaceType) && t.IsClass)
                 .ToList();

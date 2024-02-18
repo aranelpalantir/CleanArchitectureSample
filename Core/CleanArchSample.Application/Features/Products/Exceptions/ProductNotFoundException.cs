@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Application.Features.Products.Exceptions
 {
-    internal sealed class ProductNotFoundException() : BaseRuleException("Ürün bulunamadı!")
+    internal sealed class ProductNotFoundException() : BaseBusinessRuleException("Ürün bulunamadı!")
     {
     }
 }

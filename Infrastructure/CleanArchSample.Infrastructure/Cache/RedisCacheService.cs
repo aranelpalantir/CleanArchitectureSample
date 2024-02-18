@@ -1,11 +1,11 @@
 ﻿using System.Text.Json;
-using CleanArchSample.Application.Interfaces.RedisCache;
+using CleanArchSample.Application.Abstractions.Cache;
 using StackExchange.Redis;
 
-namespace CleanArchSample.Infrastructure.RedisCache
+namespace CleanArchSample.Infrastructure.Cache
 {
     internal sealed class RedisCacheService(IDatabase database, IConnectionMultiplexer connectionMultiplexer)
-        : IRedisCacheService
+        : ICacheService
     {
         public async Task<T?> GetAsync<T>(string key)
         {

@@ -1,4 +1,4 @@
-﻿namespace CleanArchSample.Application.Interfaces.Security
+﻿namespace CleanArchSample.Application.Abstractions.Security
 {
     public interface IUserContext
     {

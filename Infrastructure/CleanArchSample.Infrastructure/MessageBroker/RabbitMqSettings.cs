@@ -1,4 +1,4 @@
-﻿namespace CleanArchSample.Infrastructure.RabbitMQ
+﻿namespace CleanArchSample.Infrastructure.MessageBroker
 {
     internal sealed class RabbitMqSettings
     {

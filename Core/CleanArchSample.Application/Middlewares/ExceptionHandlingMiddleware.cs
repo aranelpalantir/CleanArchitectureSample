@@ -35,7 +35,7 @@ namespace CleanArchSample.Application.Middlewares
                     StatusCode = statusCode
                 }.ToString());
 
-            if (exception is BaseRuleException or BaseRepositoryException)
+            if (exception is BaseBusinessRuleException or BaseRepositoryException)
                 return httpContext.Response.WriteAsync(new ExceptionModel
                 {
                     Errors = new[] { exception.Message },
@@ -53,7 +53,7 @@ namespace CleanArchSample.Application.Middlewares
             exception switch
             {
                 ValidationException => StatusCodes.Status400BadRequest,
-                BaseRuleException ruleException => (int)(ruleException.StatusCode),
+                BaseBusinessRuleException ruleException => (int)(ruleException.StatusCode),
                 BaseRepositoryException => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };

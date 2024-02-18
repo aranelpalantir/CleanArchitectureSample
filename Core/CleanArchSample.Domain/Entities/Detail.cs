@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Domain.Entities
 {
-    public class Detail : EntityBase
+    public class Detail : BaseEntity
     {
         public string Title { get; set; }
         public string Description { get; set; }

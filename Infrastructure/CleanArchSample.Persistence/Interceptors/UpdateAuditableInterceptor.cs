@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using CleanArchSample.Application.Abstractions.Security;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 using CleanArchSample.Domain.Primitives;
-using CleanArchSample.Application.Interfaces.Security;
 
 namespace CleanArchSample.Persistence.Interceptors
 {
@@ -24,7 +23,7 @@ namespace CleanArchSample.Persistence.Interceptors
         private void UpdateAuditableEntities(DbContext context)
         {
             var utcNow = DateTimeOffset.UtcNow;
-            var entities = context.ChangeTracker.Entries<EntityBase>().ToList();
+            var entities = context.ChangeTracker.Entries<BaseEntity>().ToList();
 
             foreach (var entry in entities)
             {

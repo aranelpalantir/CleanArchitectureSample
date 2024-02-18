@@ -18,7 +18,7 @@ namespace CleanArchSample.Api.Controllers.v1
             return Ok(response);
         }
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "user,Admin")]
         public async Task<IActionResult> CreateBrand(CreateBrandCommandRequest request)
         {
             await Mediator.Send(request);

@@ -2,5 +2,5 @@
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions
 {
-    internal sealed class UserShouldBeExist() : BaseRuleException("Kullanıcı bulunamadı!");
+    internal sealed class UserShouldBeExist() : BaseBusinessRuleException("Kullanıcı bulunamadı!");
 }
