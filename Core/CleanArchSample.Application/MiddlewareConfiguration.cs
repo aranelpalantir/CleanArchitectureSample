@@ -8,7 +8,6 @@ namespace CleanArchSample.Application
         public static void ConfigureApplicationMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<RequestTimingMiddleware>();
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
         }
     }
 }

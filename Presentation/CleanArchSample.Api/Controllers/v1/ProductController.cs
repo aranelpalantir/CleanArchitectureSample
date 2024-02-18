@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CleanArchSample.Api.Extensions;
 using CleanArchSample.Application.Features.Products.Commands.CreateProduct;
 using CleanArchSample.Application.Features.Products.Commands.DeleteProduct;
 using CleanArchSample.Application.Features.Products.Commands.UpdateProduct;
@@ -21,10 +22,10 @@ namespace CleanArchSample.Api.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(CreateProductCommandRequest request)
+        public async Task<IResult> CreateProduct(CreateProductCommandRequest request)
         {
-            await Mediator.Send(request);
-            return Ok();
+            var result = await Mediator.Send(request);
+            return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
         }
 
         [HttpPost]

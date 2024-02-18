@@ -1,16 +1,16 @@
-﻿using System.Net;
+﻿using CleanArchSample.SharedKernel;
 
 namespace CleanArchSample.Application.Exceptions
 {
-    internal class BaseBusinessRuleException : ApplicationException
+    public class BaseBusinessRuleException : ApplicationException
     {
-        public HttpStatusCode StatusCode { get; init; }
+        public ErrorType ErrorType { get; init; }
         public BaseBusinessRuleException() { }
 
-        public BaseBusinessRuleException(string message, HttpStatusCode httpStatusCode = HttpStatusCode.BadRequest) :
+        public BaseBusinessRuleException(string message, ErrorType errorType = ErrorType.Validation) :
             base(message)
         {
-            StatusCode = httpStatusCode;
+            ErrorType = errorType;
         }
     }
 }

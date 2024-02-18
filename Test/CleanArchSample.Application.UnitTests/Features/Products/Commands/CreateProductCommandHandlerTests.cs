@@ -6,6 +6,8 @@ using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Entities;
 using CleanArchSample.Domain.Repositories;
+using CleanArchSample.SharedKernel;
+using FluentAssertions;
 using MediatR;
 using Moq;
 
@@ -62,7 +64,7 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
                     x.AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         }
         [Fact]
-        public async Task Handle_Should_ReturnUnitValue_InIdealScenario()
+        public async Task Handle_Should_ReturnSuccess_InIdealScenario()
         {
             //Arrange
             SetupMocksForInIdealScenario();
@@ -75,7 +77,7 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
             var result = await handler.Handle(command, default);
 
             //Assert
-            Assert.Equal(Unit.Value, result);
+            result.IsSuccess.Should().BeTrue();
 
         }
         [Fact]
