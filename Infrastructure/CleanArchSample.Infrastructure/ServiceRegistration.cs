@@ -6,7 +6,10 @@ using CleanArchSample.Application.Interfaces.RedisCache;
 using CleanArchSample.Infrastructure.RedisCache;
 using StackExchange.Redis;
 using CleanArchSample.Application.Interfaces.Security;
+using CleanArchSample.Infrastructure.RabbitMQ;
 using CleanArchSample.Infrastructure.Security;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using RabbitMQ.Client;
 
 namespace CleanArchSample.Infrastructure
 {
@@ -19,15 +22,19 @@ namespace CleanArchSample.Infrastructure
             services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCache"));
             services.AddTransient<IRedisCacheService, RedisCacheService>();
 
+            services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
+
             var serviceScopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
             RedisCacheSettings redisCacheSettings;
+            RabbitMqSettings rabbitMqSettings;
             ITokenService tokenService;
             using (var scope = serviceScopeFactory.CreateScope())
             {
                 redisCacheSettings = scope.ServiceProvider.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
+                rabbitMqSettings = scope.ServiceProvider.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
                 tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
             }
-            
+
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,9 +65,17 @@ namespace CleanArchSample.Infrastructure
                 return connectionMultiplexer.GetDatabase();
             });
 
+            services.AddSingleton<IConnectionFactory>(new ConnectionFactory
+            {
+                HostName = rabbitMqSettings.Host,
+                UserName = rabbitMqSettings.Username,
+                Password = rabbitMqSettings.Password
+            });
+
             services.AddHealthChecks()
                 .AddSqlServer(configuration.GetConnectionString("DefaultConnection")!)
-                .AddRedis(redisCacheSettings.Configuration);
+                .AddRedis(redisCacheSettings.Configuration)
+                .AddRabbitMQ(rabbitMqSettings.Host, HealthStatus.Unhealthy);
 
             services
                 .AddHealthChecksUI(setupSettings: setup =>
