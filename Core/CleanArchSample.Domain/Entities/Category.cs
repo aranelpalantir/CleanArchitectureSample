@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Domain.Entities
 {
-    public class Category : EntityBase
+    public class Category : BaseEntity
     {
         public int ParentId { get; set; }
         public string Name { get; set; }

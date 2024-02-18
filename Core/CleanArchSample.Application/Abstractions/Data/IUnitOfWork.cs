@@ -1,4 +1,4 @@
-﻿namespace CleanArchSample.Application.Data
+﻿namespace CleanArchSample.Application.Abstractions.Data
 {
     public interface IUnitOfWork : IAsyncDisposable
     {

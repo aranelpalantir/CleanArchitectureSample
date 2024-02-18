@@ -2,14 +2,18 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using CleanArchSample.Application.Interfaces.RedisCache;
-using CleanArchSample.Infrastructure.RedisCache;
 using StackExchange.Redis;
-using CleanArchSample.Application.Interfaces.Security;
-using CleanArchSample.Infrastructure.RabbitMQ;
 using CleanArchSample.Infrastructure.Security;
+using MassTransit;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RabbitMQ.Client;
+using System.Reflection;
+using CleanArchSample.Application.Abstractions.Cache;
+using CleanArchSample.Application.Abstractions.MessageBroker;
+using CleanArchSample.Application.Abstractions.Security;
+using CleanArchSample.Application.Features.Brands.IntegrationEvents;
+using CleanArchSample.Infrastructure.Cache;
+using CleanArchSample.Infrastructure.MessageBroker;
 
 namespace CleanArchSample.Infrastructure
 {
@@ -17,10 +21,11 @@ namespace CleanArchSample.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            var assembly = Assembly.GetExecutingAssembly();
             services.Configure<TokenSettings>(configuration.GetSection("JWT"));
             services.AddTransient<ITokenService, TokenService>();
             services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCache"));
-            services.AddTransient<IRedisCacheService, RedisCacheService>();
+            services.AddTransient<ICacheService, RedisCacheService>();
 
             services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
 
@@ -72,6 +77,24 @@ namespace CleanArchSample.Infrastructure
                 Password = rabbitMqSettings.Password
             });
 
+
+            services.AddMassTransit(busConfigurator =>
+            {
+                busConfigurator.AddConsumers(Assembly.GetAssembly(typeof(BrandCreatedIntegrationEventConsumer)));
+                busConfigurator.SetKebabCaseEndpointNameFormatter();
+                busConfigurator.UsingRabbitMq((context, configurator) =>
+                {
+                    configurator.Host(new Uri($"amqp://{rabbitMqSettings.Host}"), h =>
+                    {
+                        h.Username(rabbitMqSettings.Username);
+                        h.Password(rabbitMqSettings.Password);
+                    });
+                    configurator.ConfigureEndpoints(context);
+                });
+            });
+
+            services.AddTransient<IIntegrationEventBus, IntegrationEventBus>();
+
             services.AddHealthChecks()
                 .AddSqlServer(configuration.GetConnectionString("DefaultConnection")!)
                 .AddRedis(redisCacheSettings.Configuration)
@@ -83,11 +106,11 @@ namespace CleanArchSample.Infrastructure
                     setup.SetEvaluationTimeInSeconds(5); // Configures the UI to poll for healthchecks updates every 5 seconds
                     setup.SetApiMaxActiveRequests(1);//Only one active request will be executed at a time. All the excedent requests will result in 429 (Too many requests)
                     setup.AddHealthCheckEndpoint("endpoint1", "http://localhost:8080/health");
-                    setup.AddHealthCheckEndpoint("endpoint2", "http://localhost:8001/health");
-                    setup.AddHealthCheckEndpoint("endpoint3", "http://remoteendpoint:9000/health");
-                    setup.AddWebhookNotification("webhook1", uri: "https://healthchecks.requestcatcher.com/",
-                        payload: "{ message: \"Webhook report for [[LIVENESS]]: [[FAILURE]] - Description: [[DESCRIPTIONS]]\"}",
-                        restorePayload: "{ message: \"[[LIVENESS]] is back to life\"}");
+                    //setup.AddHealthCheckEndpoint("endpoint2", "http://localhost:8001/health");
+                    //setup.AddHealthCheckEndpoint("endpoint3", "http://remoteendpoint:9000/health");
+                    //setup.AddWebhookNotification("webhook1", uri: "https://healthchecks.requestcatcher.com/",
+                    //    payload: "{ message: \"Webhook report for [[LIVENESS]]: [[FAILURE]] - Description: [[DESCRIPTIONS]]\"}",
+                    //    restorePayload: "{ message: \"[[LIVENESS]] is back to life\"}");
                     setup.SetNotifyUnHealthyOneTimeUntilChange(); // You will only receive one failure notification until the status changes.
                 }).AddInMemoryStorage();
         }

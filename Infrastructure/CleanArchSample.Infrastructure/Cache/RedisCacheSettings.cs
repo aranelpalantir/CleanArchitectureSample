@@ -1,4 +1,4 @@
-﻿namespace CleanArchSample.Infrastructure.RedisCache
+﻿namespace CleanArchSample.Infrastructure.Cache
 {
     internal sealed class RedisCacheSettings
     {

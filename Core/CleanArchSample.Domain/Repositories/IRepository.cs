@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Domain.Repositories
 {
-    public interface IRepository<T> where T : class, IEntityBase, new()
+    public interface IRepository<T> where T : class, IBaseEntity, new()
     {
         Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull;
         Task AddAsync(T entity, CancellationToken cancellationToken = default);

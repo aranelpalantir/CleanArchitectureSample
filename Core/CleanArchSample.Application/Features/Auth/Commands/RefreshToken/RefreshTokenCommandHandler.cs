@@ -1,5 +1,5 @@
-﻿using CleanArchSample.Application.Features.Auth.Rules;
-using CleanArchSample.Application.Interfaces.Security;
+﻿using CleanArchSample.Application.Abstractions.Security;
+using CleanArchSample.Application.Features.Auth.Rules;
 using CleanArchSample.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

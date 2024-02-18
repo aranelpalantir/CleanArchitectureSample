@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CleanArchSample.Persistence.Repositories
 {
     internal abstract class BaseRepository<T>(AppDbContext dbContext) : IRepository<T>
-        where T : class, IEntityBase, new()
+        where T : class, IBaseEntity, new()
     {
         protected readonly AppDbContext DbContext = dbContext;
         private DbSet<T> Table => DbContext.Set<T>();

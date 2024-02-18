@@ -1,30 +1,30 @@
 ﻿using System.Text.Json;
+using CleanArchSample.Application.Abstractions.Cache;
 using CleanArchSample.Application.Attributes;
-using CleanArchSample.Application.Interfaces.RedisCache;
 using MediatR;
 
 namespace CleanArchSample.Application.Behaviours
 {
-    internal sealed class RedisCacheBehaviour<TRequest, TResponse>(IRedisCacheService redisCacheService)
+    internal sealed class RequestCacheBehaviour<TRequest, TResponse>(ICacheService cacheService)
         : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var type = typeof(TRequest);
-            var hasRedisCacheAttribute = Attribute.IsDefined(type, typeof(RedisCacheAttribute));
-            if (hasRedisCacheAttribute)
+            var hasRequestCacheAttribute = Attribute.IsDefined(type, typeof(RequestCacheAttribute));
+            if (hasRequestCacheAttribute)
             {
                 var key = GenerateKey(request);
-                var cachedData = await redisCacheService.GetAsync<TResponse>(key);
+                var cachedData = await cacheService.GetAsync<TResponse>(key);
                 if (cachedData != null)
                     return cachedData;
 
                 var response = await next();
 
-                var redisCacheAttribute = (RedisCacheAttribute?)Attribute.GetCustomAttribute(type, typeof(RedisCacheAttribute));
-                if (response != null && redisCacheAttribute != null)
-                    await redisCacheService.SetAsync<TResponse>(key, response, redisCacheAttribute.CacheSeconds);
+                var requestCacheAttribute = (RequestCacheAttribute?)Attribute.GetCustomAttribute(type, typeof(RequestCacheAttribute));
+                if (response != null && requestCacheAttribute != null)
+                    await cacheService.SetAsync<TResponse>(key, response, requestCacheAttribute.CacheSeconds);
             }
 
             return await next();

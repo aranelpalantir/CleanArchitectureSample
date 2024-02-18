@@ -1,5 +1,5 @@
-﻿using CleanArchSample.Application.IntegrationTests.Stubs;
-using CleanArchSample.Application.Interfaces.Security;
+﻿using CleanArchSample.Application.Abstractions.Security;
+using CleanArchSample.Application.IntegrationTests.Stubs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

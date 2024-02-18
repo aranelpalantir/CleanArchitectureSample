@@ -2,7 +2,7 @@
 using CleanArchSample.Domain.DomainEvents.Product;
 using MediatR;
 
-namespace CleanArchSample.Application.Features.Products.Events
+namespace CleanArchSample.Application.Features.Products.DomainEventHandlers
 {
     internal sealed class ProductDeletedDomainEventHandler : INotificationHandler<ProductDeletedDomainEvent>
     {

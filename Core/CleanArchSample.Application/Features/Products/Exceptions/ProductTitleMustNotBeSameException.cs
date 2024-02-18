@@ -2,5 +2,5 @@
 
 namespace CleanArchSample.Application.Features.Products.Exceptions
 {
-    internal sealed class ProductTitleMustNotBeSameException() : BaseRuleException("Ürün başlığı zaten var!");
+    internal sealed class ProductTitleMustNotBeSameException() : BaseBusinessRuleException("Ürün başlığı zaten var!");
 }

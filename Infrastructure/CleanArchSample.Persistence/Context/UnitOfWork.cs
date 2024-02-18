@@ -1,4 +1,4 @@
-﻿using CleanArchSample.Application.Data;
+﻿using CleanArchSample.Application.Abstractions.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchSample.Persistence.Context

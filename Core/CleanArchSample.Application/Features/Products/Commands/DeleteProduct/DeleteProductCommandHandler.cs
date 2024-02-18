@@ -1,4 +1,4 @@
-﻿using CleanArchSample.Application.Data;
+﻿using CleanArchSample.Application.Abstractions.Data;
 using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Repositories;
 using MediatR;

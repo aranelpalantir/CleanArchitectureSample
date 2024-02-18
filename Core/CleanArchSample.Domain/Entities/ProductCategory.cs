@@ -2,7 +2,7 @@
 
 namespace CleanArchSample.Domain.Entities
 {
-    public class ProductCategory : IEntityBase
+    public class ProductCategory : IBaseEntity
     {
         public int ProductId { get; set; }
         public int CategoryId { get; set; }

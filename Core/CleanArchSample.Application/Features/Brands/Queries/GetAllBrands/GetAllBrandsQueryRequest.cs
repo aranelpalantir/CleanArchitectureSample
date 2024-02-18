@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CleanArchSample.Application.Features.Brands.Queries.GetAllBrands;
 
-[RedisCache]
+[RequestCache]
 public class GetAllBrandsQueryRequest : IRequest<IReadOnlyList<GetAllBrandsQueryResponse>>
 {
 }

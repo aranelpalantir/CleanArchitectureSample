@@ -5,11 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using CleanArchSample.Application.Data;
+using CleanArchSample.Application.Abstractions.Security;
 using CleanArchSample.Domain.Repositories;
 using CleanArchSample.Persistence.Repositories;
-using CleanArchSample.Application.Interfaces.Security;
-using Microsoft.Extensions.Options;
+using CleanArchSample.Application.Abstractions.Data;
 
 namespace CleanArchSample.Persistence
 {

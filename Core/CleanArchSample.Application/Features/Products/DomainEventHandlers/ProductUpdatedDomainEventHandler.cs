@@ -1,8 +1,8 @@
-﻿using CleanArchSample.Domain.DomainEvents.Product;
+﻿using System.Diagnostics;
+using CleanArchSample.Domain.DomainEvents.Product;
 using MediatR;
-using System.Diagnostics;
 
-namespace CleanArchSample.Application.Features.Products.Events
+namespace CleanArchSample.Application.Features.Products.DomainEventHandlers
 {
     internal class ProductUpdatedDomainEventHandler : INotificationHandler<ProductUpdatedDomainEvent>
     {

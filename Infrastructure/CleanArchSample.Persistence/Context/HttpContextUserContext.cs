@@ -1,4 +1,4 @@
-﻿using CleanArchSample.Application.Interfaces.Security;
+﻿using CleanArchSample.Application.Abstractions.Security;
 using Microsoft.AspNetCore.Http;
 
 namespace CleanArchSample.Persistence.Context

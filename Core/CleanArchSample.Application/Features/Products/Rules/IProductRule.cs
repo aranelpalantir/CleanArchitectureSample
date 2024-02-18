@@ -1,8 +1,8 @@
-﻿using CleanArchSample.Application.Interfaces.Rules;
+﻿using CleanArchSample.Application.Abstractions.BusinessRule;
 
 namespace CleanArchSample.Application.Features.Products.Rules
 {
-    internal interface IProductRule : IBaseRule
+    internal interface IProductRule : IBaseBusinessRule
     {
         Task ProductTitleMustNotBeSame(string title, CancellationToken cancellationToken);
     }

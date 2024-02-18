@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CleanArchSample.Application.Data;
+using CleanArchSample.Application.Abstractions.Data;
 using CleanArchSample.Application.Features.Products.Commands.CreateProduct;
 using CleanArchSample.Application.Features.Products.Exceptions;
 using CleanArchSample.Application.Features.Products.Rules;
