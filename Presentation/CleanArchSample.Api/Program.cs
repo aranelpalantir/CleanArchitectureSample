@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CleanArchSample.Api.Infrastructure;
 using CleanArchSample.Application;
 using CleanArchSample.Persistence;
 using CleanArchSample.Infrastructure;
@@ -88,7 +89,8 @@ try
         .CreateLogger();
     builder.Logging.ClearProviders();
     builder.Logging.AddSerilog();
-
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
 
     Log.Information("Starting web application");
     var app = builder.Build();
@@ -107,7 +109,8 @@ try
     app.UseHttpsRedirection();
 
     app.ConfigureApplicationMiddleware();
-
+    app.UseExceptionHandler();
+    
     app.UseRouting()
         .UseAuthorization()
         .UseEndpoints(config => config.MapHealthChecksUI(opt =>

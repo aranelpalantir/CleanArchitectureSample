@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using CleanArchSample.SharedKernel;
+using MediatR;
 
 namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
 {
-    public class CreateProductCommandRequest : IRequest<Unit>
+    public class CreateProductCommandRequest : IRequest<Result>
     {
         public string? Title { get; set; }
         public string? Description { get; set; }

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\CleanArchSample.SharedKernel\CleanArchSample.SharedKernel.csproj" />
     <ProjectReference Include="..\CleanArchSample.Domain\CleanArchSample.Domain.csproj" />
   </ItemGroup>
 
