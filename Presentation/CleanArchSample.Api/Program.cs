@@ -94,7 +94,7 @@ try
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DockerCompose")
     {
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -120,7 +120,7 @@ try
     });
 
     app.MapControllers();
-   
+
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
