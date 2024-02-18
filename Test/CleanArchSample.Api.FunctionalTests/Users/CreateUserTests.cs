@@ -2,7 +2,6 @@
 using System.Net.Http.Json;
 using CleanArchSample.Api.FunctionalTests.Abstractions;
 using CleanArchSample.Application.Features.Auth.Commands.Register;
-using CleanArchSample.Domain.Entities;
 using FluentAssertions;
 
 namespace CleanArchSample.Api.FunctionalTests.Users;
