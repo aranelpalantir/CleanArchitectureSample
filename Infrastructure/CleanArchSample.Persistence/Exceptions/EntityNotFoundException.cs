@@ -1,4 +1,5 @@
 ﻿
+using CleanArchSample.Application.Enums;
 using CleanArchSample.Application.Exceptions;
 
 namespace CleanArchSample.Persistence.Exceptions

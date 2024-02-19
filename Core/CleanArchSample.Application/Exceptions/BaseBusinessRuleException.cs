@@ -1,4 +1,6 @@
-﻿namespace CleanArchSample.Application.Exceptions
+﻿using CleanArchSample.Application.Enums;
+
+namespace CleanArchSample.Application.Exceptions
 {
     public class BaseBusinessRuleException : ApplicationException
     {

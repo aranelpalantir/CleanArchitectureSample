@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using CleanArchSample.Application.Enums;
 using CleanArchSample.Application.Exceptions;
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions

@@ -1,5 +1,4 @@
-﻿
-namespace CleanArchSample.Application.Exceptions
+﻿namespace CleanArchSample.Application.Enums
 {
     public enum ErrorType
     {
