@@ -1,122 +1,61 @@
-﻿using Asp.Versioning;
-using CleanArchSample.Api.Infrastructure;
+﻿using CleanArchSample.Api.Infrastructure;
 using CleanArchSample.Application;
 using CleanArchSample.Persistence;
 using CleanArchSample.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
 using Serilog;
-using CleanArchSample.Persistence.Context;
-using Microsoft.EntityFrameworkCore;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add services to the container.
-
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Version = "v1",
-            Title = "Clean Architecture - WebApi v1",
-            Description = "This Api will be responsible for overall data distribution and authorization."
-        });
-        c.SwaggerDoc("v2", new OpenApiInfo
-        {
-            Version = "v2",
-            Title = "Clean Architecture - WebApi v2",
-            Description = "This Api will be responsible for overall data distribution and authorization."
-        });
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-        {
-            Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer",
-            BearerFormat = "JWT",
-            In = ParameterLocation.Header,
-            Description = "'Bearer yazıp boşluk bırakıp Token'ı girmelisiniz. \r\n\r\n Örneğin: Bearer eyfsefertewrtewt."
-        });
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-        {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-        });
-    });
-
-    builder.Services.AddHttpContextAccessor();
-    builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     var env = builder.Environment;
     builder.Configuration
         .SetBasePath(env.ContentRootPath)
         .AddJsonFile("appsettings.json", optional: false)
         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
+    builder.Services.AddControllers();
+
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.ConfigureSwagger();
+    builder.Services.AddHttpContextAccessor();
+    builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
     builder.Services.AddPersistence(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddApplication();
 
-    builder.Services.AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1);
-        options.ReportApiVersions = true;
-        options.AssumeDefaultVersionWhenUnspecified = true;
-        options.ApiVersionReader = ApiVersionReader.Combine(
-            new UrlSegmentApiVersionReader(),
-            new HeaderApiVersionReader("X-Api-Version"));
-    }).AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'V";
-        options.SubstituteApiVersionInUrl = true;
-    });
+    builder.Services.ConfigureApiVersioning();
 
     Log.Logger = new LoggerConfiguration()
         .WriteTo.Console()
         .CreateLogger();
     builder.Logging.ClearProviders();
     builder.Logging.AddSerilog();
+
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
 
     Log.Information("Starting web application");
+
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "DockerCompose")
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Api v1");
-            c.SwaggerEndpoint("/swagger/v2/swagger.json", "Web Api v2");
-        });
-    }
+    app.ConfigureSwagger();
 
     app.UseHttpsRedirection();
 
     app.ConfigureApplicationMiddleware();
     app.UseExceptionHandler();
-    
+
     app.UseRouting()
         .UseAuthorization()
         .UseEndpoints(config => config.MapHealthChecksUI(opt =>
         {
             opt.UIPath = "/health-ui";
         }));
+
     app.MapHealthChecks("health", new HealthCheckOptions
     {
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
@@ -124,21 +63,7 @@ try
 
     app.MapControllers();
 
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-
-        try
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            dbContext.Database.Migrate();
-        }
-        catch (Exception ex)
-        {
-            var logger = services.GetRequiredService<ILogger<Program>>();
-            logger.LogError(ex, "An error occurred while migrating the database.");
-        }
-    }
+    app.MigrateDb();
 
     app.Run();
 }
