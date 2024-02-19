@@ -1,4 +1,5 @@
-﻿using CleanArchSample.Application.Exceptions;
+﻿using CleanArchSample.Application.Enums;
+using CleanArchSample.Application.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
