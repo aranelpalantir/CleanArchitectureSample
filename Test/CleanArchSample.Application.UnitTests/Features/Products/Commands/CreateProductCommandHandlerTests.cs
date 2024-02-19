@@ -6,7 +6,6 @@ using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Entities;
 using CleanArchSample.Domain.Repositories;
-using CleanArchSample.SharedKernel;
 using FluentAssertions;
 using MediatR;
 using Moq;
@@ -77,7 +76,7 @@ namespace CleanArchSample.Application.UnitTests.Features.Products.Commands
             var result = await handler.Handle(command, default);
 
             //Assert
-            result.IsSuccess.Should().BeTrue();
+            result.Should().Be(Unit.Value);
 
         }
         [Fact]

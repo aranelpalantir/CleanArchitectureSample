@@ -1,6 +1,4 @@
-﻿using CleanArchSample.SharedKernel;
-
-namespace CleanArchSample.Application.Exceptions
+﻿namespace CleanArchSample.Application.Exceptions
 {
     public class BaseBusinessRuleException : ApplicationException
     {

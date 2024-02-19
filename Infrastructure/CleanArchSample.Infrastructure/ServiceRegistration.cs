@@ -21,7 +21,6 @@ namespace CleanArchSample.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var assembly = Assembly.GetExecutingAssembly();
             services.Configure<TokenSettings>(configuration.GetSection("JWT"));
             services.AddTransient<ITokenService, TokenService>();
             services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCache"));
