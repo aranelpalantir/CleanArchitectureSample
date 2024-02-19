@@ -29,10 +29,6 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchSample.Api.FunctionalTests", "Test\CleanArchSample.Api.FunctionalTests\CleanArchSample.Api.FunctionalTests.csproj", "{1C2AC97D-7810-4885-A4B6-8BF994CFDD88}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{705D6773-FC6B-4E30-AEF8-A266D891E355}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchSample.SharedKernel", "Shared\CleanArchSample.SharedKernel\CleanArchSample.SharedKernel.csproj", "{0EA8B580-90EA-4904-99B8-34FD1675A742}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,10 +71,6 @@ Global
 		{1C2AC97D-7810-4885-A4B6-8BF994CFDD88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C2AC97D-7810-4885-A4B6-8BF994CFDD88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C2AC97D-7810-4885-A4B6-8BF994CFDD88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EA8B580-90EA-4904-99B8-34FD1675A742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EA8B580-90EA-4904-99B8-34FD1675A742}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EA8B580-90EA-4904-99B8-34FD1675A742}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EA8B580-90EA-4904-99B8-34FD1675A742}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,7 +84,6 @@ Global
 		{9B80370D-673C-4B3F-83CE-535311A5EDA6} = {43FBD79F-65F8-46C2-86CE-C5D9F892A133}
 		{9513E7CD-1352-4738-84E9-2890D970D5A0} = {43FBD79F-65F8-46C2-86CE-C5D9F892A133}
 		{1C2AC97D-7810-4885-A4B6-8BF994CFDD88} = {43FBD79F-65F8-46C2-86CE-C5D9F892A133}
-		{0EA8B580-90EA-4904-99B8-34FD1675A742} = {705D6773-FC6B-4E30-AEF8-A266D891E355}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F8F2A96-D038-4B41-ABA3-218C21E5157F}

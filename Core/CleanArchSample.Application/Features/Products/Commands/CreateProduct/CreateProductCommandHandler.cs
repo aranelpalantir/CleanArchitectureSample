@@ -4,7 +4,6 @@ using CleanArchSample.Application.Features.Products.Rules;
 using CleanArchSample.Domain.DomainEvents.Product;
 using CleanArchSample.Domain.Entities;
 using CleanArchSample.Domain.Repositories;
-using CleanArchSample.SharedKernel;
 using MediatR;
 
 namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
@@ -15,15 +14,15 @@ namespace CleanArchSample.Application.Features.Products.Commands.CreateProduct
         IMapper mapper,
         IPublisher publisher,
         IProductRule productRule) :
-        IRequestHandler<CreateProductCommandRequest, Result>
+        IRequestHandler<CreateProductCommandRequest, Unit>
     {
-        public async Task<Result> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
         {
             await ValidateProductRules(request, cancellationToken);
             var product = MapToProductEntity(request);
             await SaveProductToDatabase(product, cancellationToken);
             await publisher.Publish(new ProductCreatedDomainEvent(product.Id), cancellationToken);
-            return Result.Success();
+            return Unit.Value;
         }
         private async Task ValidateProductRules(CreateProductCommandRequest request, CancellationToken cancellationToken)
         {

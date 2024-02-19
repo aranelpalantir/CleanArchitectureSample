@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using CleanArchSample.Application.Exceptions;
-using CleanArchSample.SharedKernel;
 
 namespace CleanArchSample.Application.Features.Auth.Exceptions
 {
