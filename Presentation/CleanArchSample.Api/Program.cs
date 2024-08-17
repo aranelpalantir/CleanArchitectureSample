@@ -12,7 +12,7 @@ try
 
     var env = builder.Environment;
     builder.Configuration
-        .SetBasePath(env.ContentRootPath)
+        .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json", optional: false)
         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 

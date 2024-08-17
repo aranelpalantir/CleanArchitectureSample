@@ -3,7 +3,6 @@ using CleanArchSample.Application.IntegrationTests.Stubs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
 
@@ -11,22 +10,21 @@ namespace CleanArchSample.Application.IntegrationTests.Abstractions;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
+    private static readonly int MssqlPort = new Random().Next(1440, 1500);
+
+    private static readonly string MssqlPassword = "d3YYOOrr0bQluNiQLtF2";
+
+    private static readonly MsSqlContainer DbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2019-latest")
-        .WithPortBinding(1435, 1433)
-        .WithPassword("ah+beM-]<g)$[}")
+        .WithPortBinding(MssqlPort, 1433)
+        .WithPassword(MssqlPassword)
         .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration((context, config) =>
-        {
-            // Set the base path to the integration tests build output directory
-            // where the integration tests' config files will be copied into.
-            config.SetBasePath(Directory.GetCurrentDirectory());
-            config.AddJsonFile("appsettings.json");
-            config.AddJsonFile("appsettings.IntegrationTest.json");
-        });
+        builder.UseEnvironment("IntegrationTest");
+        builder.UseSetting("ConnectionStrings:DefaultConnection",
+            $"Server=localhost,{MssqlPort};Database=master;User Id=sa;Password={MssqlPassword};TrustServerCertificate=true;");
         builder.ConfigureTestServices(services =>
         {
             var descriptor = services
@@ -36,13 +34,12 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             services.AddScoped<IUserContext, TestUserContext>();
         });
     }
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
-        return _dbContainer.StartAsync();
+        await DbContainer.StartAsync();
     }
-
-    public new Task DisposeAsync()
+    public new async Task DisposeAsync()
     {
-        return _dbContainer.StopAsync();
+        await DbContainer.StopAsync();
     }
 }
