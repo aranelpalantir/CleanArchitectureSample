@@ -1,41 +1,38 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Testcontainers.MsSql;
 
 namespace CleanArchSample.Api.FunctionalTests.Abstractions;
 
-public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>,IAsyncLifetime
+public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
+    private static readonly int MssqlPort = new Random().Next(1440, 1500);
+
+    private static readonly string MssqlPassword = "zOF8As7uvwKY7VclJga8";
+
+    private static readonly MsSqlContainer DbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2019-latest")
-        .WithPortBinding(1436, 1433)
-        .WithPassword("v48]]UW[k3R[e0")
+        .WithPortBinding(MssqlPort, 1433)
+        .WithPassword(MssqlPassword)
         .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration((context, config) =>
-        {
-            // Set the base path to the integration tests build output directory
-            // where the integration tests' config files will be copied into.
-            config.SetBasePath(Directory.GetCurrentDirectory());
-            config.AddJsonFile("appsettings.json");
-            config.AddJsonFile("appsettings.FunctionalTest.json");
-        });
+        builder.UseEnvironment("FunctionalTest");
+        builder.UseSetting("ConnectionStrings:DefaultConnection",
+            $"Server=localhost,{MssqlPort};Database=master;User Id=sa;Password={MssqlPassword};TrustServerCertificate=true;");
         builder.ConfigureTestServices(services =>
         {
-           
+
         });
     }
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
-        return _dbContainer.StartAsync();
+        await DbContainer.StartAsync();
     }
-
-    public new Task DisposeAsync()
+    public new async Task DisposeAsync()
     {
-        return _dbContainer.StopAsync();
+        await DbContainer.StopAsync();
     }
 }
